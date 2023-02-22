@@ -49,7 +49,7 @@ void SymTable_free(SymTable_T oSymTable) {
 
         /*frees the keys & values */
         free(bind->key);
-        free(bind->value);
+        free((void*)(bind->value));
 
         /* frees the bind */
         free(bind);
@@ -69,20 +69,26 @@ size_t SymTable_getLength(SymTable_T oSymTable) {
 int SymTable_put(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct Bind *newBind;
-        const char *copy;
+        char *copy;
+        size_t *length;
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
         assert(pvValue != NULL);
 
         /*Makes a Defensive Copy of the string that pcKey points to &
         stores the address of that copy in a new binding*/
+        length = (size_t)malloc(sizeof(size_t));
+        length = strlen(pcKey);
+        copy = (char)malloc(sizeof(length));
+        strcpy(copy, pcKey);
 
         if (newBind == NULL) {
             return 0;
         }
 
-        newBind->key = pcKey;
-        newBind->value = pvValue;
+        /*assigns key and value*/
+        newBind->key = (char*)copy;
+        newBind->value = (void*)pvValue;
 
         /*inputs the newBind at the beginning of the SymTable*/
         newBind->next = oSymTable->first;
@@ -93,19 +99,21 @@ int SymTable_put(SymTable_T oSymTable,
 void *SymTable_replace(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct Bind *tmp;
-        int val;
+        size_t val;
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
         assert(pvValue != NULL);
+
 
         /* checks if oSymTable contains the key */
         if (SymTable_contains(oSymTable, pcKey) != 1) {
             return NULL;
         }
+
         /* replaces the value with a given value */
         for (tmp = oSymTable-> first; tmp!= NULL; tmp = tmp-> next) {
             if (tmp->key == pcKey) {
-                val = tmp->value; 
+                val = (size_t*)(tmp->value); 
                 tmp->value = pvValue;
             }
         }
