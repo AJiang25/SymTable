@@ -179,6 +179,15 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
 void SymTable_map(SymTable_T oSymTable,
     void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
     const void *pvExtra) {
+        struct Bind *current;
 
+        assert(oSymTable != NULL);
+        assert(pfApply != NULL);
+
+        for (current = oSymTable->first; current != NULL; 
+             current = current->next) {
+                (*pfApply)((void*)current->key, 
+                (void*) current->value, (void*) pvExtra);
+        }
 
     }
