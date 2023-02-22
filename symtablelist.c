@@ -30,9 +30,7 @@ SymTable_T SymTable_new(void) {
         return NULL;
     }   
 
-    /*Sets first to NULL, the key & value of first to NULL
-    , and counter to 0*/
-    oSymTable->first = NULL;
+    /*Sets the key & value to NULL and counter to 0*/
     oSymTable->first->key = NULL;
     oSymTable->first->value = NULL;
     oSymTable->counter = 0; 
