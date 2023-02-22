@@ -79,8 +79,8 @@ int SymTable_put(SymTable_T oSymTable,
         stores the address of that copy in a new binding*/
         length = (size_t*)malloc(sizeof(size_t*));
         length = (size_t*)(strlen(pcKey));
-        
-        copy = (char*)malloc(sizeof(char*));
+
+        copy = (char*)malloc(sizeof(length));
         strcpy(copy, pcKey);
 
         /*allocates memory for the newBind*/
@@ -138,19 +138,19 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
+    const void *item;
+
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-
-    /* checks if oSymTable contains the key */
-    if (SymTable_contains(oSymTable, pcKey) != 1) {
-        return NULL;
-    }
+    
     /* gets the value */
-    for (tmp = oSymTable-> first; tmp!= NULL; tmp = tmp-> next) {
+    for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp-> next) {
+        item = oSymTable->first->value;
         if (tmp->key == pcKey) {
-            return (void*) tmp->value;
+            return item;
         }
     }
+    return NULL;
 }
 
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {

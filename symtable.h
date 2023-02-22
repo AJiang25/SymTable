@@ -22,7 +22,8 @@ Symbol Table*/
 typedef struct Bind *Bind;
 
 /* */
-static size_t SymTable_hash(const char *pcKey, size_t uBucketCount);
+/*static size_t SymTable_hash(const char *pcKey, size_t uBucketCount);
+*/
 
 /* returns a new SymTable object that contains no bindings
 , or NULL if insufficient memory is available.*/
