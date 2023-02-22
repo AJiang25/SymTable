@@ -30,7 +30,9 @@ SymTable_T SymTable_new(void) {
         return NULL;
     }   
 
-    /*Sets key & value to NULL, and counter to 0*/
+    /*Sets first to NULL, the key & value of first to NULL
+    , and counter to 0*/
+    oSymTable->first = NULL;
     oSymTable->first->key = NULL;
     oSymTable->first->value = NULL;
     oSymTable->counter = 0; 
@@ -43,7 +45,7 @@ void SymTable_free(SymTable_T oSymTable) {
     struct Bind *next;
     assert(oSymTable != NULL);
 
-    for (bind = oSymTable->first->next; bind != NULL; bind = next) {
+    for (bind = oSymTable->first; bind != NULL; bind = next) {
         /* sets next to the bind's next target */
         next = bind->next;
 
@@ -115,7 +117,7 @@ void *SymTable_replace(SymTable_T oSymTable,
         }
 
         /* replaces the value with a given value */
-        for (tmp = oSymTable-> first; tmp!= NULL; tmp = tmp-> next) {
+        for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp->next) {
             if (tmp->key == pcKey) {
                 val = (void*)(tmp->value); 
                 tmp->value = pvValue;
@@ -128,7 +130,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    for (tmp = oSymTable-> first; tmp!= NULL; tmp = tmp-> next) {
+    for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp->next) {
         if (tmp->key == pcKey) {
             return 1;
         }
