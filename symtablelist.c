@@ -79,8 +79,12 @@ int SymTable_put(SymTable_T oSymTable,
         stores the address of that copy in a new binding*/
         length = (size_t*)malloc(sizeof(size_t*));
         length = (size_t*)(strlen(pcKey));
-        copy = (char*)malloc(sizeof(length));
+        
+        copy = (char*)malloc(sizeof(char*));
         strcpy(copy, pcKey);
+
+        /*allocates memory for the newBind*/
+        newBind = (Bind)malloc(sizeof(struct Bind));
 
         if (newBind == NULL) {
             return 0;
@@ -113,11 +117,11 @@ void *SymTable_replace(SymTable_T oSymTable,
         /* replaces the value with a given value */
         for (tmp = oSymTable-> first; tmp!= NULL; tmp = tmp-> next) {
             if (tmp->key == pcKey) {
-                val = (size_t*)(tmp->value); 
+                val = (size_t)(tmp->value); 
                 tmp->value = pvValue;
             }
         }
-        return val;
+        return (void*)val;
     }
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
@@ -144,14 +148,14 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     /* gets the value */
     for (tmp = oSymTable-> first; tmp!= NULL; tmp = tmp-> next) {
         if (tmp->key == pcKey) {
-            return tmp->value;
+            return (void*) tmp->value;
         }
     }
 }
 
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
-    int val;
+    size_t val;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
@@ -162,14 +166,14 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     /* removes the value with a given value */
     for (tmp = oSymTable-> first; tmp!= NULL; tmp = tmp-> next) {
         if (tmp->key == pcKey) {
-            val = tmp->value;
-            free(tmp->value);
+            val = (size_t)tmp->value;
+            free((void*)(tmp->value));
             free(tmp->key);
             tmp->next = tmp->next->next;
             free(tmp);
         }
     }
-    return val;
+    return (void*)val;
 }
 
 void SymTable_map(SymTable_T oSymTable,
