@@ -97,6 +97,7 @@ int SymTable_put(SymTable_T oSymTable,
         /*inputs the newBind at the beginning of the SymTable*/
         newBind->next = oSymTable->first;
         oSymTable->first = newBind;
+        oSymTable->counter++;
         return 1;
     }
 
