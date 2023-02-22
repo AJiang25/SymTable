@@ -103,12 +103,11 @@ int SymTable_put(SymTable_T oSymTable,
 void *SymTable_replace(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct Bind *tmp;
-        size_t val;
+        void* val;
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
         assert(pvValue != NULL);
-
-
+        
         /* checks if oSymTable contains the key */
         if (SymTable_contains(oSymTable, pcKey) != 1) {
             return NULL;
@@ -117,11 +116,11 @@ void *SymTable_replace(SymTable_T oSymTable,
         /* replaces the value with a given value */
         for (tmp = oSymTable-> first; tmp!= NULL; tmp = tmp-> next) {
             if (tmp->key == pcKey) {
-                val = (size_t)(tmp->value); 
+                val = (void*)(tmp->value); 
                 tmp->value = pvValue;
             }
         }
-        return (void*)val;
+        return val;
     }
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
