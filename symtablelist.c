@@ -138,11 +138,11 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
-    const void *item;
+    void *item;
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    
+
     /* gets the value */
     for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp-> next) {
         item = oSymTable->first->value;
