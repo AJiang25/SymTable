@@ -175,7 +175,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
             val = (void*)tmp->value;
             free(tmp->key);
             tmp->next = tmp->next->next;
-            return (void*)val;
+            return val;
             }
         }
     }
