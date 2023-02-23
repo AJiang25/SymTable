@@ -155,7 +155,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
 
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
-    size_t val;
+    void *val;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
@@ -168,7 +168,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     /* removes the value with a given value */
     for (tmp = oSymTable-> first; tmp!= NULL; tmp = tmp-> next) {
         if (tmp->key == pcKey) {
-            val = (size_t)tmp->value;
+            val = (void*)tmp->value;
             free((void*)(tmp->value));
             free(tmp->key);
             tmp->next = tmp->next->next;
