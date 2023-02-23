@@ -107,6 +107,7 @@ void *SymTable_replace(SymTable_T oSymTable,
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
         assert(pvValue != NULL);
+        val = NULL;
         
         /* checks if oSymTable contains the key */
         if (SymTable_contains(oSymTable, pcKey) != 1) {
@@ -157,6 +158,8 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     size_t val;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
+
+    val = NULL;
 
     /* checks if oSymTable contains the key */
     if (SymTable_contains(oSymTable, pcKey) != 1) {
