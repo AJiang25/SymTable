@@ -143,10 +143,8 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
-
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-
     if (SymTable_contains(oSymTable, pcKey)) {
 
         /* gets the value */
@@ -169,12 +167,11 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     val = NULL;
 
     /* checks if oSymTable contains the key */
-    if (SymTable_contains(oSymTable, pcKey) != 1) {
-        return NULL;
-    }
-    /* removes the value with a given value */
-    for (tmp = oSymTable-> first; tmp!= NULL; tmp = tmp-> next) {
-        if (tmp->key == pcKey) {
+    if (SymTable_contains(oSymTable, pcKey)) {
+
+    /* replaces the value with a given value */
+    for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp->next) {
+        if (strcmp(tmp->key,pcKey) == 0) {
             val = (void*)tmp->value;
             free((void*)(tmp->value));
             free(tmp->key);
@@ -183,6 +180,8 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
         }
     }
     return (void*)val;
+    }
+    return NULL;
 }
 
 void SymTable_map(SymTable_T oSymTable,
