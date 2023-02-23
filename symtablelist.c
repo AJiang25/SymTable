@@ -134,7 +134,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
     for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp->next) {
-        if (*(tmp->key) == *pcKey) {
+        if (strcmp(tmp->key, pcKey)== 0) {
             return 1;
         }
     }
