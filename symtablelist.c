@@ -111,7 +111,6 @@ void *SymTable_replace(SymTable_T oSymTable,
         void* val;
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
-        assert(pvValue != NULL);
         val = NULL;
         
         /* checks if oSymTable contains the key */
@@ -179,6 +178,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
             if (strcmp(before->key, pcKey) == 0) {
                 val = (void*)before->value;
                 free(before->key);
+
                 /*connects first to the one after the first bind*/
                 oSymTable->first = tmp;
                 free((void*)before->value);
