@@ -151,7 +151,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     /* gets the value */
     for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp-> next) {
         item = (void*)(oSymTable->first->value);
-        if (tmp->key == pcKey) {
+        if (strcmp(tmp->key, pcKey) == 0) {
             return item;
         }
     }
