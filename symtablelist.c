@@ -74,6 +74,11 @@ int SymTable_put(SymTable_T oSymTable,
         assert(pcKey != NULL);
         assert(pvValue != NULL);
 
+        /* first checks if pcKey exists already in SymTable*/
+        if (SymTable_contains(oSymTable, pcKey)) {
+            return 0;
+        }
+
         /*Makes a Defensive Copy of the string that pcKey points to &
         stores the address of that copy in a new binding*/
         length = (size_t*)malloc(sizeof(size_t*));
