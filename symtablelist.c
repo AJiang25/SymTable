@@ -49,9 +49,6 @@ void SymTable_free(SymTable_T oSymTable) {
         /*frees the keys & values */
         free(bind->key);
         free((void*)(bind->value));
-
-        /* frees the bind */
-        free(bind);
     }
 
     /*frees the overall SymTable after values are freed */
