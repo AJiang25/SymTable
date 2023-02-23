@@ -120,7 +120,7 @@ void *SymTable_replace(SymTable_T oSymTable,
 
         /* replaces the value with a given value */
         for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp->next) {
-            if (tmp->key == pcKey) {
+            if (strcmp(tmp->key,pcKey) == 0) {
                 val = (void*)(tmp->value); 
                 tmp->value = pvValue;
             }
