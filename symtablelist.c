@@ -143,20 +143,20 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
-    void *item;
 
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    
+
     if (SymTable_contains(oSymTable, pcKey)) {
+
         /* gets the value */
         for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp-> next) {
-            item = (void*)(oSymTable->first->value);
             if (strcmp(tmp->key, pcKey) == 0) {
-                return item;
+                return (void*)(tmp->value);
             }
         }
     }
+
     return NULL;
 }
 
