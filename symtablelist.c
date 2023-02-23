@@ -171,15 +171,13 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
 
     /* replaces the value with a given value */
     for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp->next) {
-        if (strcmp(tmp->key,pcKey) == 0) {
+        if (strcmp(tmp->key, pcKey) == 0) {
             val = (void*)tmp->value;
-            free((void*)(tmp->value));
             free(tmp->key);
             tmp->next = tmp->next->next;
-            free(tmp);
+            return (void*)val;
+            }
         }
-    }
-    return (void*)val;
     }
     return NULL;
 }
