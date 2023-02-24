@@ -48,7 +48,7 @@ void SymTable_free(SymTable_T oSymTable) {
 
         /*frees the keys & values */
         free(bind->key);
-        free((void*)(bind->value));
+        free(bind);
     }
 
     /*frees the overall SymTable after values are freed */
@@ -84,7 +84,7 @@ int SymTable_put(SymTable_T oSymTable,
         strcpy(copy, pcKey);
 
         /*allocates memory for the newBind*/
-        newBind = (Bind)malloc(sizeof(struct Bind));
+        newBind = (struct Bind*)malloc(sizeof(struct Bind));
 
         if (newBind == NULL) {
             return 0;

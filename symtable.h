@@ -17,10 +17,6 @@ hold a unique key and a value*/
 
 typedef struct SymTable *SymTable_T;
 
-/* A bind object maintains a unique key and a value for a 
-Symbol Table*/
-typedef struct Bind *Bind;
-
 /* */
 /*static size_t SymTable_hash(const char *pcKey, size_t uBucketCount);
 */
