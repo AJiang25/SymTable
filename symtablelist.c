@@ -174,16 +174,15 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
         /*handles first key case*/
         if (before == NULL) {
             val = (void*)tmp->value;
-            free(tmp->key);
             oSymTable->first = tmp->next;
-            free(tmp);
-            oSymTable->counter--;
-            return val;
         }
-
-        val = (void*)tmp->value;
+        /*handles other key cases*/
+        else {
+            val = (void*)tmp->value;
+            before->next = tmp->next;
+        }
+        /* keys the key, tmp, decrements counter, returns val*/
         free(tmp->key);
-        before->next = tmp->next;
         free(tmp);
         oSymTable->counter--;
         return val;
