@@ -178,16 +178,18 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
                 
                 /*connects first to the one after the first bind*/
                 oSymTable->first = tmp;
-                free((void*)before->value);
+                free(before);
+                oSymTable->counter--;
                 return val;
             }
 
-            /*when the key matches, remove the value*/
+            /*when the key matches, remove the key*/
             if (strcmp(tmp->key, pcKey) == 0) {
                 val = (void*)tmp->value;
                 free(tmp->key);
                 before->next = tmp->next;
-                tmp->next = tmp->next->next;
+                free(tmp);
+                oSymTable->counter--;
                 return val;
                 }
             }
