@@ -107,7 +107,6 @@ void *SymTable_replace(SymTable_T oSymTable,
         void* val;
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
-        assert(pvValue != NULL);
         val = NULL;
         
         /* checks if oSymTable contains the key */
