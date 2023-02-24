@@ -81,6 +81,7 @@ int SymTable_put(SymTable_T oSymTable,
         length = (size_t*)(strlen(pcKey));
 
         copy = (char*)malloc(sizeof(length));
+        free(length);
         strcpy(copy, pcKey);
 
         /*allocates memory for the newBind*/
