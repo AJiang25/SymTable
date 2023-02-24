@@ -66,7 +66,6 @@ int SymTable_put(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct Bind *newBind;
         char *copy;
-        size_t *length;
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
 
@@ -77,10 +76,7 @@ int SymTable_put(SymTable_T oSymTable,
 
         /*Makes a Defensive Copy of the string that pcKey points to &
         stores the address of that copy in a new binding*/
-        length = (size_t*)malloc(sizeof(size_t*));
-        length = (size_t*)(strlen(pcKey));
-
-        copy = (char*)malloc(sizeof(length));
+        copy = malloc(strlen(pcKey) + 1);
         strcpy(copy, pcKey);
 
         /*allocates memory for the newBind*/
