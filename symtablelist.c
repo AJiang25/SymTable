@@ -162,39 +162,33 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     assert(pcKey != NULL);
 
     val = NULL;
+    before = NULL;
 
     /* checks if oSymTable contains the key */
     if (SymTable_contains(oSymTable, pcKey)) {
-        before = oSymTable->first;
         
         /* replaces the value with a given value */
-        for (tmp = oSymTable->first->next; tmp!= NULL; 
-            tmp = tmp->next, before = before->next) {
+        for (tmp = oSymTable->first; tmp!= NULL && 
+            strcmp(tmp->key, pcKey); 
+            before = tmp, tmp = tmp->next);
 
-            /*handles case when the first key matches*/
-            if (strcmp(before->key, pcKey) == 0) {
-                val = (void*)before->value;
-                free(before->key);
-                
-                /*connects first to the one after the first bind*/
-                oSymTable->first = tmp;
-                free(before);
-                oSymTable->counter--;
-                return val;
-            }
-
-            /*when the key matches, remove the key*/
-            if (strcmp(tmp->key, pcKey) == 0) {
-                val = (void*)tmp->value;
-                free(tmp->key);
-                before->next = tmp->next;
-                free(tmp);
-                oSymTable->counter--;
-                return val;
-                }
-            }
-        
+        /*handles first key case*/
+        if (before == NULL) {
+            val = (void*)tmp->value;
+            free(tmp->key);
+            oSymTable->first = tmp->next;
+            free(tmp);
+            oSymTable->counter--;
+            return val;
         }
+
+        val = (void*)tmp->value;
+        free(tmp->key);
+        before->next = tmp->next;
+        free(tmp);
+        oSymTable->counter--;
+        return val;
+    }
     return NULL;
 }
 
