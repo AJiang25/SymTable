@@ -164,9 +164,10 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     val = NULL;
 
     /* checks if oSymTable contains the key */
-    before = oSymTable->first;
+    if (SymTable_contains(oSymTable, pcKey)) {
+        before = oSymTable->first;
         
-    /* replaces the value with a given value */
+        /* replaces the value with a given value */
         for (tmp = oSymTable->first->next; tmp!= NULL; 
             tmp = tmp->next, before = before->next) {
 
@@ -193,6 +194,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
                 }
             }
         
+        }
     return NULL;
 }
 
