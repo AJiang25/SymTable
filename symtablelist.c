@@ -9,15 +9,20 @@
 to the first Bind and contains a counter that maintains the number
 of binds*/
 struct SymTable {
+    /*points to the first bind*/
     struct Bind *first;
+    /*tracks the number of binds*/
     size_t counter;
 };
 
 /* A value and unique key is stored in a bind. Binds are linked
  to form a list*/
 struct Bind {
+    /*points to a string that represents the key*/
     char *key;
+    /*points to a value*/
     const void *value;
+    /*points to the next bind in the linked list*/
     struct Bind *next;
 };
 
@@ -193,6 +198,7 @@ void SymTable_map(SymTable_T oSymTable,
 
         assert(oSymTable != NULL);
         assert(pfApply != NULL);
+        assert(pvExtra != NULL);
 
         for (current = oSymTable->first; current != NULL; 
              current = current->next) {
