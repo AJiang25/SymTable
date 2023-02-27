@@ -7,6 +7,22 @@
 
 enum {BUCKET_COUNT = 509};
 
+struct SymTable {
+    /*points to the bucket*/
+    struct Bind **buckets;
+    /*tracks the number of binds*/
+    size_t counter;
+};
+
+struct Bind {
+    /*points to a string that represents the key*/
+    char *key;
+    /*points to a value*/
+    const void *value;
+    /*points to the next bind in the linked list*/
+    struct Bind *next;
+};
+
 static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 {
    const size_t HASH_MULTIPLIER = 65599;
@@ -21,24 +37,8 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
 
-struct SymTable {
-    /*points to the bucket*/
-    struct Bind *buckets[BUCKET_COUNT];
-    /*tracks the number of binds*/
-    size_t counter;
-};
-
-struct Bind {
-    /*points to a string that represents the key*/
-    char *key;
-    /*points to a value*/
-    const void *value;
-    /*points to the next bind in the linked list*/
-    struct Bind *next;
-};
-
 SymTable_T SymTable_new(void) {
-    int i;
+    size_t i;
     SymTable_T oSymTable; 
 
     /*allocates memory for a new SymTable*/
@@ -47,9 +47,10 @@ SymTable_T SymTable_new(void) {
         return NULL;
     } 
 
-    /*sets all values of the buckets to NULL*/
-    for (i = 0; i < BUCKET_COUNT; i++) {
-        oSymTable->buckets[i] = NULL;
+    oSymTable->buckets = calloc(BUCKET_COUNT, sizeof(struct Bind*));
+    if (oSymTable->buckets == NULL) {
+        free(oSymTable);
+        return NULL;
     }
 
     /*Sets counter to 0*/
@@ -60,15 +61,20 @@ SymTable_T SymTable_new(void) {
 
 /* frees all memory occupied by oSymTable. */
 void SymTable_free(SymTable_T oSymTable) {;
-    int i;
+    size_t i;
     struct Bind *bind;
     struct Bind *next;
     assert(oSymTable != NULL);
 
     for (i = 0; i < BUCKET_COUNT; i++) {
-        free(oSymTable->buckets[i]);
+        bind = oSymTable->buckets[i];
+        while (bind != NULL) {
+            next = bind->next;
+            free(bind->key);
+            free(bind);
+            bind = next;
+        }
     }
-   
     /*frees the overall SymTable after values are freed */
     free(oSymTable);
 }
