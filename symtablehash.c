@@ -38,16 +38,17 @@ struct Bind {
 };
 
 SymTable_T SymTable_new(void) {
-   SymTable_T oSymTable; 
+    int i;
+    SymTable_T oSymTable; 
 
-   /*allocates memory for a new SymTable*/
-   oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
+    /*allocates memory for a new SymTable*/
+    oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
     if (oSymTable == NULL) {
         return NULL;
     } 
 
     /*sets all values of the buckets to NULL*/
-    for (int i = 0; i < BUCKET_COUNT; i++) {
+    for (i = 0; i < BUCKET_COUNT; i++) {
         oSymTable->buckets[i] = NULL;
     }
 
@@ -58,18 +59,14 @@ SymTable_T SymTable_new(void) {
 }
 
 /* frees all memory occupied by oSymTable. */
-void SymTable_free(SymTable_T oSymTable) {
-   struct Bind *bind;
-   struct Bind *next;
-   assert(oSymTable != NULL);
+void SymTable_free(SymTable_T oSymTable) {;
+    int i;
+    struct Bind *bind;
+    struct Bind *next;
+    assert(oSymTable != NULL);
 
-   for (bind = oSymTable->buckets; bind != BUCKET_COUNT; bind = next) {
-        /* sets next to the bind's next target */
-        next = bind->next;
-
-        /*frees the keys & bind itself */
-        free(bind->key);
-        free(bind);
+    for (i = 0; i < BUCKET_COUNT; i++) {
+        free(oSymTable->buckets[i]);
     }
    
     /*frees the overall SymTable after values are freed */
@@ -88,9 +85,7 @@ returns 1 (TRUE), otherwise return 0 (FALSE) and leave oSymTable
 unchanged. Return a checked runtime error when oSymTable or pcKey 
 is NULL */
 int SymTable_put(SymTable_T oSymTable,
-    const char *pcKey, const void *pvValue) {
-
-    }
+    const char *pcKey, const void *pvValue);
 
 /* If oSymTable contains a binding with key pcKey, then 
 SymTable_replace must replace the binding's value with pvValue 
