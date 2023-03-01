@@ -177,7 +177,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     }
     for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
         if (strcmp(pcKey, tmp->key) == 0) 
-            return tmp->value;
+            return (void*)tmp->value;
     }
 }
 /*fix this*/
@@ -189,7 +189,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
-    hash = Symtable_hash(pcKey, BUCKET_COUNT);
+    hash = SymTable_hash(pcKey, BUCKET_COUNT);
     val = NULL;
     before = NULL;
 
