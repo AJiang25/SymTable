@@ -200,7 +200,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
         tmp != NULL; tmp = tmp->next){
 
             if (strcmp(pcKey, tmp->key) == 0) 
-                break;;
+                break;
             }
 
         /* skips to the bind */
