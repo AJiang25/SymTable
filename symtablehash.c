@@ -179,6 +179,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
         if (strcmp(pcKey, tmp->key) == 0) 
             return (void*)tmp->value;
     }
+    return NULL;
 }
 /*fix this*/
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
@@ -202,17 +203,17 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
                 break;;
             }
 
-        /* replaces the value with a given value */
-        for (tmp = oSymTable->buckets, before = NULL; tmp!= NULL && 
-            strcmp(tmp->key, pcKey); 
+        /* skips to the bind */
+        for (tmp = oSymTable->buckets[hash], before = NULL; 
+        tmp!= NULL && strcmp(tmp->key, pcKey); 
             before = tmp, tmp = tmp->next);
 
-        /*handles first key case*/
+        /*handles first bind case*/
         if (before == NULL) {
             val = (void*)tmp->value;
             oSymTable->buckets[hash] = tmp->next;
         }
-        /*handles other key cases*/
+        /*handles other bind cases*/
         else {
             val = (void*)tmp->value;
             before->next = tmp->next;
