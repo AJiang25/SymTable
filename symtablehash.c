@@ -8,22 +8,6 @@
 /*The number of hash buckets used in the symtable*/
 enum {BUCKET_COUNT = 509};
 
-/* Return a hash code for pcKey that is between 0 and uBucketCount-1,
-   inclusive. */
-static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
-{
-   const size_t HASH_MULTIPLIER = 65599;
-   size_t u;
-   size_t uHash = 0;
-
-   assert(pcKey != NULL);
-
-   for (u = 0; pcKey[u] != '\0'; u++)
-      uHash = uHash * HASH_MULTIPLIER + (size_t)pcKey[u];
-
-   return uHash % uBucketCount;
-}
-
 /* A SymTable structure is a "manager" structure that points
 to a "bucket" and contains a counter that maintains the number
 of binds*/
@@ -44,6 +28,22 @@ struct Bind {
     /*points to the next bind in the linked list*/
     struct Bind *next;
 };
+
+/* Return a hash code for pcKey that is between 0 and uBucketCount-1,
+   inclusive. */
+static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
+{
+   const size_t HASH_MULTIPLIER = 65599;
+   size_t u;
+   size_t uHash = 0;
+
+   assert(pcKey != NULL);
+
+   for (u = 0; pcKey[u] != '\0'; u++)
+      uHash = uHash * HASH_MULTIPLIER + (size_t)pcKey[u];
+
+   return uHash % uBucketCount;
+}
 
 SymTable_T SymTable_new(void) {
     SymTable_T oSymTable; 
