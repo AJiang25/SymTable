@@ -7,7 +7,7 @@ CFLAGS =
 # CFLAGS = -D NDEBUG -O
 
 # Dependency rules for non-file targets
-all: testintmath
+all: testsymtable
 clobber: clean
 rm -f *~ \#*\#
 clean:

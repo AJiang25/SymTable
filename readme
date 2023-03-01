@@ -12,7 +12,7 @@ in the "Policies" web page (also available on armlab in the file
 ~cos217/AuthorizedSourcesList ) to this section of the readme file,
 and edit it as appropriate.
 
-The course's lectures.
+The course's lectures: 1 - 10
 
 The course's precepts.
 
@@ -25,6 +25,8 @@ The course's textbooks.
 The man pages on the armlab cluster.
 
 The course's current staff members outside of class time through office hours.
+
+Donna's office hours
 
 The course's current staff members outside of class time through meetings.
 Donna Gabai
@@ -81,18 +83,18 @@ write "None."
    symtablelist.c: line 71: medium priority:
    Do you want to validate 'pvValue' through an assert?
 
-   symtablelist.c: line 106: medium priority:
+   symtablelist.c: line 109: medium priority:
    Do you want to validate 'pvValue' through an assert?
 
-   symtablelist.c: line 196: medium priority:
+   symtablelist.c: line 198: medium priority:
    Do you want to validate 'pvExtra' through an assert?
 
-   pvValue in line 71 & line 106 should not be asserted to be != to NULL
+   pvValue in line 71 & line 109 should not be asserted to be != to NULL
    because a SymTable object is not responsible for allocating the
    memory in which its values reside. This means that the value could be
    NULL. 
 
-   pvExtra in line 196 should not be asserted to be != to NULL becuase
+   pvExtra in line 198 should not be asserted to be != to NULL becuase
    on line 427 in testsymtable.c, NULL can be passed as an argument
 
 ------------------------------------------------------------------------
@@ -109,7 +111,22 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
+   symtablehash.c: line 95: medium priority:
+   Do you want to validate 'pvValue' through an assert?
 
+   symtablehash.c: line 136: medium priority:
+   Do you want to validate 'pvValue' through an assert?
+
+   symtablehash.c: line 237: medium priority:
+   Do you want to validate 'pvExtra' through an assert?
+
+   pvValue in line 95 & line 136 should not be asserted to be != to NULL
+   because a SymTable object is not responsible for allocating the
+   memory in which its values reside. This means that the value could be
+   NULL. 
+
+   pvExtra in line 237 should not be asserted to be != to NULL becuase
+   on line 427 in testsymtable.c, NULL can be passed as an argument
 
 ------------------------------------------------------------------------
 What are the CPU times reported by testsymtable.c with binding counts
