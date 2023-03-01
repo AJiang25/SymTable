@@ -68,62 +68,62 @@ size_t SymTable_getLength(SymTable_T oSymTable) {
 
 
 int SymTable_put(SymTable_T oSymTable,
-    const char *pcKey, const void *pvValue) {
-        struct Bind *newBind;
-        char *copy;
-        assert(oSymTable != NULL);
-        assert(pcKey != NULL);
+const char *pcKey, const void *pvValue) {
+    struct Bind *newBind;
+    char *copy;
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
 
-        /* first checks if pcKey exists already in SymTable*/
-        if (SymTable_contains(oSymTable, pcKey)) {
-            return 0;
-        }
-
-        /*Makes a Defensive Copy of the string that pcKey points to &
-        stores the address of that copy in a new binding*/
-        copy = malloc(strlen(pcKey) + 1);
-        strcpy(copy, pcKey);
-
-        /*allocates memory for the newBind*/
-        newBind = (struct Bind*)malloc(sizeof(struct Bind));
-
-        if (newBind == NULL) {
-            return 0;
-        }
-
-        /*assigns key and value*/
-        newBind->key = (char*)copy;
-        newBind->value = (void*)pvValue;
-
-        /*inputs the newBind at the beginning of the SymTable*/
-        newBind->next = oSymTable->first;
-        oSymTable->first = newBind;
-        oSymTable->counter++;
-        return 1;
+    /* first checks if pcKey exists already in SymTable*/
+    if (SymTable_contains(oSymTable, pcKey)) {
+        return 0;
     }
+
+    /*Makes a Defensive Copy of the string that pcKey points to &
+    stores the address of that copy in a new binding*/
+    copy = malloc(strlen(pcKey) + 1);
+    strcpy(copy, pcKey);
+
+    /*allocates memory for the newBind*/
+    newBind = (struct Bind*)malloc(sizeof(struct Bind));
+
+    if (newBind == NULL) {
+        return 0;
+    }
+
+    /*assigns key and value*/
+    newBind->key = (char*)copy;
+    newBind->value = (void*)pvValue;
+
+    /*inputs the newBind at the beginning of the SymTable*/
+    newBind->next = oSymTable->first;
+    oSymTable->first = newBind;
+    oSymTable->counter++;
+    return 1;
+}
 
 void *SymTable_replace(SymTable_T oSymTable,
-    const char *pcKey, const void *pvValue) {
-        struct Bind *tmp;
-        void* val;
-        assert(oSymTable != NULL);
-        assert(pcKey != NULL);
-        val = NULL;
+const char *pcKey, const void *pvValue) {
+    struct Bind *tmp;
+    void* val;
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+    val = NULL;
         
-        /* checks if oSymTable contains the key */
-        if (SymTable_contains(oSymTable, pcKey) != 1) {
-            return NULL;
-        }
-
-        /* replaces the value with a given value */
-        for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp->next) {
-            if (strcmp(tmp->key,pcKey) == 0) {
-                val = (void*)(tmp->value); 
-                tmp->value = pvValue;
-            }
-        }
-        return val;
+    /* checks if oSymTable contains the key */
+    if (SymTable_contains(oSymTable, pcKey) != 1) {
+        return NULL;
     }
+
+    /* replaces the value with a given value */
+    for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp->next) {
+        if (strcmp(tmp->key,pcKey) == 0) {
+            val = (void*)(tmp->value); 
+            tmp->value = pvValue;
+        }
+    }
+    return val;
+}
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
@@ -150,7 +150,6 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
             }
         }
     }
-
     return NULL;
 }
 
@@ -204,5 +203,4 @@ void SymTable_map(SymTable_T oSymTable,
                 (*pfApply)((void*)current->key, 
                 (void*) current->value, (void*) pvExtra);
         }
-
     }

@@ -37,6 +37,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
 
+/*fix this*/
 SymTable_T SymTable_new(void) {
     SymTable_T oSymTable; 
 
@@ -58,7 +59,7 @@ SymTable_T SymTable_new(void) {
     return oSymTable;
 }
 
-void SymTable_free(SymTable_T oSymTable) {;
+void SymTable_free(SymTable_T oSymTable) {
     size_t i;
     struct Bind *bind;
     struct Bind *next;
@@ -122,14 +123,95 @@ int SymTable_put(SymTable_T oSymTable,
         return 1;
     }
 
-void *SymTable_replace(SymTable_T oSymTable,
-    const char *pcKey, const void *pvValue);
+void *SymTable_replace(SymTable_T oSymTable, 
+const char *pcKey, const void *pvValue) {
+    size_t hash;
+    struct Bind *tmp;
+    void* val;
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+    val = NULL;
+        
+    /* checks if oSymTable contains the key */
+    if (SymTable_contains(oSymTable, pcKey) != 1) {
+        return NULL;
+    }
 
-int SymTable_contains(SymTable_T oSymTable, const char *pcKey);
+    /* replaces the value with a given value */
+    for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
+        if (strcmp(pcKey, tmp->key) == 0) {
+            val = (void*)tmp->value;
+            tmp->value = pvValue;
+        }
+    }
+    return val;
+}
 
-void *SymTable_get(SymTable_T oSymTable, const char *pcKey);
+int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
+    size_t hash;
+    struct Bind *tmp;
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+    hash = Symtable_hash(pcKey);
+    for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
+        if (strcmp(pcKey, tmp->key) == 0) 
+            return 1;
+    }
+    return 0;
+}
 
-void *SymTable_remove(SymTable_T oSymTable, const char *pcKey);
+void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
+    size_t hash;
+    struct Bind *tmp;
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+    hash = Symtable_hash(pcKey);
+    if (SymTable_contains(oSymTable, pcKey) == 0) {
+        return NULL;
+    }
+    for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
+        if (strcmp(pcKey, tmp->key) == 0) 
+            return tmp->value;
+    }
+}
+/*fix this*/
+void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
+    size_t hash;
+    struct Bind *tmp;
+    struct Bind *before;
+    void *val;
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+
+    val = NULL;
+    before = NULL;
+
+    /* checks if oSymTable contains the key */
+    if (SymTable_contains(oSymTable, pcKey)) {
+        
+        /* replaces the value with a given value */
+        for (tmp = oSymTable->buckets; tmp!= NULL && 
+            strcmp(tmp->key, pcKey); 
+            before = tmp, tmp = tmp->next);
+
+        /*handles first key case*/
+        if (before == NULL) {
+            val = (void*)tmp->value;
+            oSymTable->buckets = tmp->next;
+        }
+        /*handles other key cases*/
+        else {
+            val = (void*)tmp->value;
+            before->next = tmp->next;
+        }
+        /* keys the key, tmp, decrements counter, returns val*/
+        free(tmp->key);
+        free(tmp);
+        oSymTable->counter--;
+        return val;
+    }
+    return NULL;
+}
 
 void SymTable_map(SymTable_T oSymTable, void (*pfApply)
 (const char *pcKey, void *pvValue, void *pvExtra), 
