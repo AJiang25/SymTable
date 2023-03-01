@@ -11,7 +11,7 @@ all: testsymtable
 clobber: clean
 rm -f *~ \#*\#
 clean:
-rm -f testintmath *.o
+rm -f testsymtable *.o
 
 # Dependency rules for file targets
 testintmath: testintmath.o intmath.o

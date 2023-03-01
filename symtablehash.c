@@ -54,6 +54,7 @@ SymTable_T SymTable_new(void) {
         return NULL;
     } 
 
+    /*allocates memory for the buckets in the SymTable*/
     oSymTable->buckets = calloc(BUCKET_COUNT, sizeof(struct Bind*));
     if (oSymTable->buckets == NULL) {
         free(oSymTable);
@@ -71,8 +72,9 @@ void SymTable_free(SymTable_T oSymTable) {
     struct Bind *bind;
     struct Bind *next;
     assert(oSymTable != NULL);
+
     /*iterates through every bucket, goes through every node 
-    in each bucket, and removed the key & node*/
+    in each bucket, and removes the key & node*/
     for (i = 0; i < BUCKET_COUNT; i++) {
         bind = oSymTable->buckets[i];
         while (bind != NULL) {
@@ -82,8 +84,10 @@ void SymTable_free(SymTable_T oSymTable) {
             bind = next;
         }
     }
+
     /*frees the linked list array: buckets*/
     free(oSymTable->buckets);
+
     /*frees the overall SymTable after values are freed */
     free(oSymTable);
 }
