@@ -82,6 +82,9 @@ const char *pcKey, const void *pvValue) {
     /*Makes a Defensive Copy of the string that pcKey points to &
     stores the address of that copy in a new binding*/
     copy = malloc(strlen(pcKey) + 1);
+    if (copy == NULL) {
+        return 0;
+    }
     strcpy(copy, pcKey);
 
     /*allocates memory for the newBind*/

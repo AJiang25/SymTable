@@ -93,7 +93,9 @@ int SymTable_put(SymTable_T oSymTable,
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
 
-        /* first checks if pcKey exists already in SymTable*/
+        hash = SymTable_hash(pcKey, BUCKET_COUNT);
+
+        /* checks if pcKey exists already in SymTable*/
         if (SymTable_contains(oSymTable, pcKey)) {
             return 0;
         }
@@ -101,24 +103,25 @@ int SymTable_put(SymTable_T oSymTable,
         /*Makes a Defensive Copy of the string that pcKey points to &
         stores the address of that copy in a new binding*/
         copy = malloc(strlen(pcKey) + 1);
+        if (copy == NULL) {
+            return 0;
+        }
         strcpy(copy, pcKey);
 
         /*allocates memory for the newBind*/
         newBind = (struct Bind*)malloc(sizeof(struct Bind));
-
         if (newBind == NULL) {
+            free(copy);
             return 0;
         }
 
         /*assigns key and value*/
         newBind->key = (char*)copy;
         newBind->value = (void*)pvValue;
-
-        /*inputs the newBind into the SymTable*/
-        hash = SymTable_hash(pcKey, BUCKET_COUNT);
-        while(oSymTable->buckets[i] != NULL) {
-            i++;
-        }
+        
+        /*inserts the newBind into the SymTable*/
+        newBind->next = oSymTable->buckets[hash];
+        oSymTable->buckets[hash] = newBind;
         oSymTable->counter++;
         return 1;
     }
@@ -131,6 +134,7 @@ const char *pcKey, const void *pvValue) {
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
     val = NULL;
+    hash = SymTable_hash(pcKey, BUCKET_COUNT);
         
     /* checks if oSymTable contains the key */
     if (SymTable_contains(oSymTable, pcKey) != 1) {
@@ -152,7 +156,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    hash = Symtable_hash(pcKey);
+    hash = Symtable_hash(pcKey, BUCKET_COUNT);
     for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
         if (strcmp(pcKey, tmp->key) == 0) 
             return 1;
@@ -165,7 +169,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    hash = Symtable_hash(pcKey);
+    hash = Symtable_hash(pcKey, BUCKET_COUNT);
     if (SymTable_contains(oSymTable, pcKey) == 0) {
         return NULL;
     }
@@ -183,21 +187,28 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
+    hash = Symtable_hash(pcKey, BUCKET_COUNT);
     val = NULL;
     before = NULL;
 
     /* checks if oSymTable contains the key */
     if (SymTable_contains(oSymTable, pcKey)) {
-        
+        for (tmp = oSymTable->buckets[hash]; 
+        tmp != NULL; tmp = tmp->next){
+
+            if (strcmp(pcKey, tmp->key) == 0) 
+                break;;
+            }
+
         /* replaces the value with a given value */
-        for (tmp = oSymTable->buckets; tmp!= NULL && 
+        for (tmp = oSymTable->buckets, before = NULL; tmp!= NULL && 
             strcmp(tmp->key, pcKey); 
             before = tmp, tmp = tmp->next);
 
         /*handles first key case*/
         if (before == NULL) {
             val = (void*)tmp->value;
-            oSymTable->buckets = tmp->next;
+            oSymTable->buckets[hash] = tmp->next;
         }
         /*handles other key cases*/
         else {
