@@ -227,8 +227,8 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
 }
 
 void SymTable_map(SymTable_T oSymTable, void (*pfApply)
-(const char *pcKey, void *pvValue, void *pvExtra), 
-const void *pvExtra) {
+    (const char *pcKey, void *pvValue, void *pvExtra), 
+    const void *pvExtra) {
     size_t i;
     struct Bind *current;
 
@@ -238,9 +238,9 @@ const void *pvExtra) {
     for (i = 0; i < BUCKET_COUNT; i++) {
         current = oSymTable->buckets[i];
         while (current != NULL) {
-            current = current->next;
             (*pfApply)((void*)current->key, 
                 (void*) current->value, (void*) pvExtra);
+            current = current->next;
         }   
     }
 }
