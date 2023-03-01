@@ -198,13 +198,12 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     if (SymTable_contains(oSymTable, pcKey)) {
         for (tmp = oSymTable->buckets[hash]; 
         tmp != NULL; tmp = tmp->next){
-
             if (strcmp(pcKey, tmp->key) == 0) 
                 break;
             }
 
         /* skips to the bind */
-        for (tmp = oSymTable->buckets[hash], before = NULL; 
+        for (tmp = oSymTable->buckets[hash]; 
         tmp!= NULL && strcmp(tmp->key, pcKey); 
             before = tmp, tmp = tmp->next);
 
