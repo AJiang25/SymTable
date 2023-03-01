@@ -16,10 +16,6 @@
 hold a unique key and a value*/
 typedef struct SymTable *SymTable_T;
 
-/* Return a hash code for pcKey that is between 0 and uBucketCount-1,
-   inclusive. */
-static size_t SymTable_hash(const char *pcKey, size_t uBucketCount);
-
 /* returns a new SymTable object that contains no bindings
 , or NULL if insufficient memory is available.*/
 SymTable_T SymTable_new(void);
