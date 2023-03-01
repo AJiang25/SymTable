@@ -5,6 +5,7 @@
 
 #include "symtable.h"
 
+/*The number of hash buckets used in the symtable*/
 enum {BUCKET_COUNT = 509};
 
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
@@ -23,6 +24,9 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
 
+/* A SymTable structure is a "manager" structure that points
+to a "bucket" and contains a counter that maintains the number
+of binds*/
 struct SymTable {
     /*points to the bucket*/
     struct Bind **buckets;
@@ -30,6 +34,8 @@ struct SymTable {
     size_t counter;
 };
 
+/* A value and unique key is stored in a bind. Binds are linked
+ to form a list*/
 struct Bind {
     /*points to a string that represents the key*/
     char *key;
@@ -39,7 +45,6 @@ struct Bind {
     struct Bind *next;
 };
 
-/*fix this*/
 SymTable_T SymTable_new(void) {
     SymTable_T oSymTable; 
 
@@ -128,29 +133,30 @@ int SymTable_put(SymTable_T oSymTable,
     }
 
 void *SymTable_replace(SymTable_T oSymTable, 
-const char *pcKey, const void *pvValue) {
-    size_t hash;
-    struct Bind *tmp;
-    void* val;
-    assert(oSymTable != NULL);
-    assert(pcKey != NULL);
-    val = NULL;
-    hash = SymTable_hash(pcKey, BUCKET_COUNT);
+    const char *pcKey, const void *pvValue) {
+        size_t hash;
+        struct Bind *tmp;
+        void* val;
+        assert(oSymTable != NULL);
+        assert(pcKey != NULL);
+        val = NULL;
+        hash = SymTable_hash(pcKey, BUCKET_COUNT);
         
-    /* checks if oSymTable contains the key */
-    if (SymTable_contains(oSymTable, pcKey) != 1) {
-        return NULL;
-    }
-
-    /* replaces the value with a given value */
-    for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
-        if (strcmp(pcKey, tmp->key) == 0) {
-            val = (void*)tmp->value;
-            tmp->value = pvValue;
+        /* checks if oSymTable contains the key */
+        if (SymTable_contains(oSymTable, pcKey) != 1) {
+            return NULL;
         }
+
+        /* replaces the value with a given value */
+        for (tmp = oSymTable->buckets[hash]; 
+            tmp != NULL; tmp = tmp->next){
+            if (strcmp(pcKey, tmp->key) == 0) {
+                val = (void*)tmp->value;
+                tmp->value = pvValue;
+            }
+        }
+        return val;
     }
-    return val;
-}
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     size_t hash;
@@ -181,7 +187,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     }
     return NULL;
 }
-/*fix this*/
+
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     size_t hash;
     struct Bind *tmp;
