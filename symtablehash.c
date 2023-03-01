@@ -86,7 +86,6 @@ size_t SymTable_getLength(SymTable_T oSymTable) {
 
 int SymTable_put(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
-        size_t i;
         struct Bind *newBind;
         char *copy;
         size_t hash;
@@ -156,7 +155,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    hash = Symtable_hash(pcKey, BUCKET_COUNT);
+    hash = SymTable_hash(pcKey, BUCKET_COUNT);
     for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
         if (strcmp(pcKey, tmp->key) == 0) 
             return 1;
@@ -169,7 +168,8 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    hash = Symtable_hash(pcKey, BUCKET_COUNT);
+    hash = SymTable_hash(pcKey, BUCKET_COUNT);
+    
     if (SymTable_contains(oSymTable, pcKey) == 0) {
         return NULL;
     }
