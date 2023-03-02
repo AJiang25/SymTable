@@ -52,7 +52,7 @@ static size_t bucketSize(SymTable_T oSymTable) {
     if (oSymTable->counter > numBucketCounts) {
         i++;
         oSymTable->buckets = 
-            realloc(auBucketCounts[i], sizeof(struct Bind*));
+            realloc((void*)auBucketCounts[i], sizeof(struct Bind*));
         numBucketCounts = 
             sizeof(auBucketCounts)/sizeof(auBucketCounts[i]);
     }
