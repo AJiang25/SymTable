@@ -135,9 +135,7 @@ int SymTable_put(SymTable_T oSymTable,
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
 
-        numBucketCounts = 
-            sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
-        hash = SymTable_hash(pcKey, auBucketCounts[0]);
+        hash = SymTable_hash(pcKey, bucketSize(oSymTable));
 
         /* checks if pcKey exists already in SymTable*/
         if (SymTable_contains(oSymTable, pcKey)) {
@@ -151,12 +149,6 @@ int SymTable_put(SymTable_T oSymTable,
             return FALSE;
         }
         strcpy(copy, pcKey);
-
-        /*Calls the bucketSize function to expand the symtable table
-        if necessary*/
-        if (numBucketCounts > auBucketCounts[0]) {
-            
-        }
 
         /*allocates memory for the newBind*/
         newBind = (struct Bind*)malloc(sizeof(struct Bind));
