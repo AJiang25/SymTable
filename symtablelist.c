@@ -5,6 +5,9 @@
 
 #include "symtable.h"
 
+/*defines FALSE (0) and TRUE (1)*/
+enum{FALSE, TRUE};
+
 /* A SymTable structure is a "manager" structure that points
 to the first Bind and contains a counter that maintains the number
 of binds*/
@@ -76,14 +79,14 @@ const char *pcKey, const void *pvValue) {
 
     /* first checks if pcKey exists already in SymTable*/
     if (SymTable_contains(oSymTable, pcKey)) {
-        return 0;
+        return FALSE;
     }
 
     /*Makes a Defensive Copy of the string that pcKey points to &
     stores the address of that copy in a new binding*/
     copy = malloc(strlen(pcKey) + 1);
     if (copy == NULL) {
-        return 0;
+        return FALSE;
     }
     strcpy(copy, pcKey);
 
@@ -91,7 +94,7 @@ const char *pcKey, const void *pvValue) {
     newBind = (struct Bind*)malloc(sizeof(struct Bind));
 
     if (newBind == NULL) {
-        return 0;
+        return FALSE;
     }
 
     /*assigns key and value*/
@@ -102,7 +105,7 @@ const char *pcKey, const void *pvValue) {
     newBind->next = oSymTable->first;
     oSymTable->first = newBind;
     oSymTable->counter++;
-    return 1;
+    return TRUE;
 }
 
 void *SymTable_replace(SymTable_T oSymTable,
@@ -134,10 +137,10 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     assert(pcKey != NULL);
     for (tmp = oSymTable->first; tmp!= NULL; tmp = tmp->next) {
         if (strcmp(tmp->key, pcKey)== 0) {
-            return 1;
+            return TRUE;
         }
     }
-    return 0;
+    return FALSE;
 }
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {

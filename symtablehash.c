@@ -6,7 +6,7 @@
 #include "symtable.h"
 
 /*The number of hash buckets used in the symtable*/
-enum {BUCKET_COUNT = 509};
+enum {FALSE, TRUE, BUCKET_COUNT = 509};
 
 /* A SymTable structure is a "manager" structure that points
 to a "bucket" and contains a counter that maintains the number
@@ -36,12 +36,9 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    const size_t HASH_MULTIPLIER = 65599;
    size_t u;
    size_t uHash = 0;
-
    assert(pcKey != NULL);
-
    for (u = 0; pcKey[u] != '\0'; u++)
       uHash = uHash * HASH_MULTIPLIER + (size_t)pcKey[u];
-
    return uHash % uBucketCount;
 }
 
@@ -110,14 +107,14 @@ int SymTable_put(SymTable_T oSymTable,
 
         /* checks if pcKey exists already in SymTable*/
         if (SymTable_contains(oSymTable, pcKey)) {
-            return 0;
+            return FALSE;
         }
 
         /*Makes a Defensive Copy of the string that pcKey points to &
         stores the address of that copy in a new binding*/
         copy = malloc(strlen(pcKey) + 1);
         if (copy == NULL) {
-            return 0;
+            return FALSE;
         }
         strcpy(copy, pcKey);
 
@@ -125,7 +122,7 @@ int SymTable_put(SymTable_T oSymTable,
         newBind = (struct Bind*)malloc(sizeof(struct Bind));
         if (newBind == NULL) {
             free(copy);
-            return 0;
+            return FALSE;
         }
 
         /*assigns key and value*/
@@ -136,7 +133,7 @@ int SymTable_put(SymTable_T oSymTable,
         newBind->next = oSymTable->buckets[hash];
         oSymTable->buckets[hash] = newBind;
         oSymTable->counter++;
-        return 1;
+        return TRUE;
     }
 
 void *SymTable_replace(SymTable_T oSymTable, 
@@ -173,9 +170,9 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     hash = SymTable_hash(pcKey, BUCKET_COUNT);
     for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
         if (strcmp(pcKey, tmp->key) == 0) 
-            return 1;
+            return TRUE;
     }
-    return 0;
+    return FALSE;
 }
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
