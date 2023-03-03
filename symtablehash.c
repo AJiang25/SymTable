@@ -37,20 +37,20 @@ struct Bind {
 
 static size_t Bucket_Size(SymTable_T oSymTable) {
     size_t i;
+    size_t numBucketCounts;
     /*last array index in auBucketCounts[]*/
-    const size_t last;
+    const size_t last = 7;
+
 
     assert(oSymTable != NULL);
     i = 0;
-    last = 7;
 
     /* handles the case in which auBucketCounts is at a max*/
     if (oSymTable->bucketCount == auBucketCounts[last]) {
         return oSymTable->bucketCount;
     }
 
-    while (oSymTable->counter > oSymTable->bucketCount) {
-        i++;
+    while (numBucketCounts > oSymTable->bucketCount) {
         if (auBucketCounts[i] > oSymTable->bucketCount) {
             oSymTable->buckets = 
                 realloc(oSymTable->buckets, 
@@ -58,7 +58,9 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
             if (oSymTable->buckets == NULL) {
                 free(oSymTable);
                 return FALSE;
-            }  
+            }
+            oSymTable->bucketCount = auBucketCounts[i];
+            i++;  
         }
     }
     numBucketCounts = 
@@ -99,7 +101,7 @@ SymTable_T SymTable_new(void) {
 
     /*Sets counter to 0*/
     oSymTable->counter = 0;
-    oSymTable->bucketCount = auBucketCounts[0]
+    oSymTable->bucketCount = auBucketCounts[0];
 
     return oSymTable;
 }
@@ -108,7 +110,6 @@ void SymTable_free(SymTable_T oSymTable) {
     size_t i;
     struct Bind *bind;
     struct Bind *next;
-    size_t bucketSize;
     assert(oSymTable != NULL);
 
     /*iterates through every bucket, goes through every node 
@@ -146,7 +147,7 @@ int SymTable_put(SymTable_T oSymTable,
 
         /*allocates more space and sets bucketcount 
         equal to the new size*/
-        if (oSymTable->counter > SymTable->bucketCount) {
+        if (oSymTable->counter > oSymTable->bucketCount) {
             SymTable->bucketCount = Bucket_Size(oSymTable);
         }
 
