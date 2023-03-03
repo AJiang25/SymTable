@@ -37,17 +37,16 @@ static void expand(SymTable_T oSymTable) {
     int i;
     assert(oSymTable != NULL);
     i = 0;
-    while (oSymTable->counter < auBucketCounts[i]) {
+    if (oSymTable->counter > numBucketCounts) {
         i++;
-    }
-
-    oSymTable->buckets = 
-        realloc(oSymTable->buckets, 
-        sizeof(struct Bind*) * auBucketCounts[i]);
-    /* checks if reallocation was successful*/ 
-    if (oSymTable->buckets == NULL) {
-        free(oSymTable);
-        return;
+        oSymTable->buckets = 
+            realloc(oSymTable->buckets, 
+            sizeof(struct Bind*)* auBucketCounts[i]);
+        /* checks if reallocation was successful*/ 
+        if (oSymTable->buckets == NULL) {
+            free(oSymTable);
+            return;
+        }
     }
 }
 static size_t Bucket_Size(SymTable_T oSymTable) {
