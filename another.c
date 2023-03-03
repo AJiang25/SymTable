@@ -5,8 +5,12 @@
 
 #include "symtable.h"
 
-/*The number of hash buckets used in the symtable*/
-enum {FALSE, TRUE, BUCKET_COUNT = 509};
+/*defines FALSE (0) and TRUE (1)*/
+enum {FALSE, TRUE};
+
+/*global variable to store total bucket counts as a size_t array*/
+static const size_t auBucketCounts[] = {509, 1021, 2039, 
+    4093, 8191, 16381, 32749, 65521};
 
 /* A SymTable structure is a "manager" structure that points
 to a "bucket" and contains a counter that maintains the number
@@ -29,6 +33,40 @@ struct Bind {
     struct Bind *next;
 };
 
+static size_t Bucket_Size(SymTable_T oSymTable) {
+    size_t i = 0;
+    /*last array index in auBucketCounts[]*/
+    int last = 7;
+
+    /* stores the initial Bucket Counts when i is 0*/
+    size_t numBucketCounts = 
+            sizeof(auBucketCounts)/sizeof(auBucketCounts[i]);
+
+    assert(oSymTable != NULL);
+
+    /* handles the case in which auBucketCounts is at a max*/
+    if (numBucketCounts == auBucketCounts[last]) {
+        return numBucketCounts;
+    }
+
+    /* if the number of binds is less than the number of Buckets,
+    incrememnt i */
+    if (oSymTable->counter > numBucketCounts) {
+        i++;
+        oSymTable->buckets = 
+            realloc(oSymTable->buckets, 
+            sizeof(struct Bind*)* auBucketCounts[i]);
+        /* checks if reallocation was successful*/ 
+        if (oSymTable->buckets == NULL) {
+            free(oSymTable);
+            return FALSE;
+        }
+        numBucketCounts = 
+            sizeof(auBucketCounts)/sizeof(auBucketCounts[i]);
+    }
+    return numBucketCounts;
+}
+
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
    inclusive. */
 static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
@@ -48,11 +86,13 @@ SymTable_T SymTable_new(void) {
     /*allocates memory for a new SymTable*/
     oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
     if (oSymTable == NULL) {
+        free(oSymTable);
         return NULL;
     } 
 
     /*allocates memory for the buckets in the SymTable*/
-    oSymTable->buckets = calloc(BUCKET_COUNT, sizeof(struct Bind*));
+    oSymTable->buckets = calloc
+        (auBucketCounts[0], sizeof(struct Bind*));
     if (oSymTable->buckets == NULL) {
         free(oSymTable);
         return NULL;
@@ -72,7 +112,7 @@ void SymTable_free(SymTable_T oSymTable) {
 
     /*iterates through every bucket, goes through every node 
     in each bucket, and removes the key & node*/
-    for (i = 0; i < BUCKET_COUNT; i++) {
+    for (i = 0; i < Bucket_Size(oSymTable); i++) {
         bind = oSymTable->buckets[i];
         while (bind != NULL) {
             next = bind->next;
@@ -103,7 +143,7 @@ int SymTable_put(SymTable_T oSymTable,
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
 
-        hash = SymTable_hash(pcKey, BUCKET_COUNT);
+        hash = SymTable_hash(pcKey, Bucket_Size(oSymTable));
 
         /* checks if pcKey exists already in SymTable*/
         if (SymTable_contains(oSymTable, pcKey)) {
@@ -144,7 +184,7 @@ void *SymTable_replace(SymTable_T oSymTable,
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
         val = NULL;
-        hash = SymTable_hash(pcKey, BUCKET_COUNT);
+        hash = SymTable_hash(pcKey, Bucket_Size(oSymTable));
         
         /* checks if oSymTable contains the key */
         if (SymTable_contains(oSymTable, pcKey) != 1) {
@@ -167,7 +207,8 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    hash = SymTable_hash(pcKey, BUCKET_COUNT);
+    hash = SymTable_hash(pcKey, Bucket_Size(oSymTable));
+
     for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
         if (strcmp(pcKey, tmp->key) == 0) 
             return TRUE;
@@ -180,7 +221,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     struct Bind *tmp;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    hash = SymTable_hash(pcKey, BUCKET_COUNT);
+    hash = SymTable_hash(pcKey, Bucket_Size(oSymTable));
 
     if (SymTable_contains(oSymTable, pcKey) == 0) {
         return NULL;
@@ -200,7 +241,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
-    hash = SymTable_hash(pcKey, BUCKET_COUNT);
+    hash = SymTable_hash(pcKey, Bucket_Size(oSymTable));
     val = NULL;
     before = NULL;
 
@@ -245,7 +286,7 @@ void SymTable_map(SymTable_T oSymTable, void (*pfApply)
     assert(oSymTable != NULL);
     assert(pfApply != NULL);
 
-    for (i = 0; i < BUCKET_COUNT; i++) {
+    for (i = 0; i < Bucket_Size(oSymTable); i++) {
         current = oSymTable->buckets[i];
         while (current != NULL) {
             (*pfApply)((void*)current->key, 
@@ -254,3 +295,7 @@ void SymTable_map(SymTable_T oSymTable, void (*pfApply)
         }   
     }
 }
+
+
+
+
