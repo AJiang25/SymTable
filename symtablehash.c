@@ -44,26 +44,25 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
     assert(oSymTable != NULL);
     numBucketCounts = 
         sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
+        i = 0;
 
     /* handles the case in which auBucketCounts is at a max*/
     if (numBucketCounts == auBucketCounts[last]) {
         return numBucketCounts;
     }
-    
-    for (i = 0; i < numBucketCounts; i++) {
-        if (auBucketCounts[i] > oSymTable->bucketCount) {
-        oSymTable->buckets = 
-            realloc(oSymTable->buckets, 
-            sizeof(struct Bind*)* auBucketCounts[i]);
-        if (oSymTable->buckets == NULL) {
-            free(oSymTable);
-            return FALSE;
-        }
-        oSymTable->bucketCount = auBucketCounts[i];
-        break;  
-        }
-        
+
+    while (auBucketCounts[i] < oSymTable->bucketCount) {
+        i++;
     }
+    
+    oSymTable->buckets = 
+        realloc(oSymTable->buckets, 
+        sizeof(struct Bind*) * auBucketCounts[i]);
+    if (oSymTable->buckets == NULL) {
+        free(oSymTable);
+        return FALSE;
+    }
+    
     numBucketCounts = 
             sizeof(auBucketCounts)/sizeof(auBucketCounts[i]);
     return numBucketCounts;
