@@ -33,32 +33,34 @@ struct Bind {
     struct Bind *next;
 };
 
-static size_t Bucket_Size(SymTable_T oSymTable) {
-    size_t i = 0;
-
-    /* stores the initial Bucket Counts when i is 0*/
-    size_t numBucketCounts = 
-            sizeof(auBucketCounts)/sizeof(auBucketCounts[i]);
-
+static void expand(SymTable_T oSymTable) {
+    int i;
     assert(oSymTable != NULL);
-
-    while(oSymTable->counter > auBucketCounts[i]) {
+    i = 0;
+    while (oSymTable->counter < auBucketCounts[i]) {
         i++;
     }
 
-    if (i < numBucketCounts) {
-        oSymTable->buckets = 
-            realloc(oSymTable->buckets, 
-            sizeof(struct Bind*)* auBucketCounts[i]);
-        /* checks if reallocation was successful*/ 
-        if (oSymTable->buckets == NULL) {
-            free(oSymTable);
-            return FALSE;
-        }
-        return auBucketCounts[i];
+    oSymTable->buckets = 
+        realloc(oSymTable->buckets, 
+        sizeof(struct Bind*) * auBucketCounts[i]);
+    /* checks if reallocation was successful*/ 
+    if (oSymTable->buckets == NULL) {
+        free(oSymTable);
+        return FALSE;
     }
-
-    return auBucketCounts[numBucketCounts-1];
+}
+static size_t Bucket_Size(SymTable_T oSymTable) {
+    size_t i;
+    size_t numBucketCounts;
+    assert(oSymTable != NULL);
+    i = 0;
+    while (oSymTable->counter < auBucketCounts[i]) {
+        i++;
+    }
+    numBucketCounts = 
+            sizeof(auBucketCounts)/sizeof(auBucketCounts[i]);
+    return numBucketCounts;
 }
 
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
@@ -134,8 +136,16 @@ int SymTable_put(SymTable_T oSymTable,
         struct Bind *newBind;
         char *copy;
         size_t hash;
+        /* the last index of auBucketCounts */
+        int 7 = last; 
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
+
+        /* expansion call if necessary*/
+        if (oSymTable->counter == Bucket_Size(oSymTable) &&
+        oSymTable->counter != auBucketCounts[last]) {
+            expand(oSymTable);
+        }
 
         hash = SymTable_hash(pcKey, Bucket_Size(oSymTable));
 
