@@ -43,7 +43,7 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
 
     assert(oSymTable != NULL);
     numBucketCounts = 
-        sizeof(auBucketCounts)/sizeof(oSymTable->bucketCount[0]);
+        sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
 
     /* handles the case in which auBucketCounts is at a max*/
     if (oSymTable->bucketCount == auBucketCounts[last]) {
