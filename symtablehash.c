@@ -143,10 +143,10 @@ int SymTable_put(SymTable_T oSymTable,
         struct Bind *newBind;
         char *copy;
         size_t hash;
-        size_T bucketSize;
+        size_t bucketSize;
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
-        bucketSize = bucket_Size(oSymTable);
+        bucketSize = Bucket_Size(oSymTable);
 
         hash = SymTable_hash(pcKey, bucketSize);
 
@@ -190,7 +190,7 @@ void *SymTable_replace(SymTable_T oSymTable,
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
         val = NULL;
-        bucketSize = bucket_Size(oSymTable);
+        bucketSize = Bucket_Size(oSymTable);
         hash = SymTable_hash(pcKey, bucketSize);
         
         /* checks if oSymTable contains the key */
@@ -212,7 +212,7 @@ void *SymTable_replace(SymTable_T oSymTable,
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     size_t hash;
     struct Bind *tmp;
-    size_t bucketSize
+    size_t bucketSize;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
     bucketSize = bucket_Size(oSymTable);
@@ -231,7 +231,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     size_t bucketSize;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    bucketSize = bucket_Size(oSymTable);
+    bucketSize = Bucket_Size(oSymTable);
     hash = SymTable_hash(pcKey, bucketSize);
 
     if (SymTable_contains(oSymTable, pcKey) == 0) {
@@ -300,7 +300,7 @@ void SymTable_map(SymTable_T oSymTable, void (*pfApply)
     assert(oSymTable != NULL);
     assert(pfApply != NULL);
 
-    bucketSize = bucket_Size(oSymTable);
+    bucketSize = Bucket_Size(oSymTable);
 
     for (i = 0; i < bucketSize; i++) {
         current = oSymTable->buckets[i];
