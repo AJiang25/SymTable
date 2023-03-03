@@ -39,7 +39,7 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
     size_t numBucketCounts;
     /*last array index in auBucketCounts[]*/
     const size_t last = 7;
-    size_t i.
+    size_t i;
 
     assert(oSymTable != NULL);
     numBucketCounts = 
@@ -55,7 +55,7 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
     }
     
     for (i = 0; i < numBucketCounts; i++) {
-        if (auBucketCounts[ni] > oSymTable->bucketCount) {
+        if (auBucketCounts[i] > oSymTable->bucketCount) {
         oSymTable->buckets = 
             realloc(oSymTable->buckets, 
             sizeof(struct Bind*)* auBucketCounts[i]);
