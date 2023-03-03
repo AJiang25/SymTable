@@ -58,7 +58,7 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
         /* checks if reallocation was successful*/ 
         if (oSymTable->buckets == NULL) {
             free(oSymTable);
-            return numBucketCounts[0];
+            return FALSE;
         }
         numBucketCounts = 
             sizeof(auBucketCounts)/sizeof(auBucketCounts[i]);
