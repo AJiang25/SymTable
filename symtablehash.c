@@ -47,6 +47,14 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
     }
 
     if (i < numBucketCounts) {
+        oSymTable->buckets = 
+            realloc(oSymTable->buckets, 
+            sizeof(struct Bind*)* auBucketCounts[i]);
+        /* checks if reallocation was successful*/ 
+        if (oSymTable->buckets == NULL) {
+            free(oSymTable);
+            return FALSE;
+        }
         return auBucketCounts[i];
     }
 
