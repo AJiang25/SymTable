@@ -47,7 +47,7 @@ static void expand(SymTable_T oSymTable) {
     /* checks if reallocation was successful*/ 
     if (oSymTable->buckets == NULL) {
         free(oSymTable);
-        return FALSE;
+        return;
     }
 }
 static size_t Bucket_Size(SymTable_T oSymTable) {
@@ -137,7 +137,7 @@ int SymTable_put(SymTable_T oSymTable,
         char *copy;
         size_t hash;
         /* the last index of auBucketCounts */
-        int 7 = last; 
+        int last = 7; 
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
 
