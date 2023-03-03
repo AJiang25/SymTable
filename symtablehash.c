@@ -54,11 +54,11 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
     if (oSymTable->counter > numBucketCounts) {
         i++;
         oSymTable->buckets = 
-            realloc(auBucketCounts[i], sizeof(struct Bind*));
+            realloc((void*)auBucketCounts[i], sizeof(struct Bind*));
         /* checks if reallocation was successful*/ 
         if (oSymTable->buckets == NULL) {
             free(oSymTable);
-            return NULL;
+            return numBucketCounts[0];
         }
         numBucketCounts = 
             sizeof(auBucketCounts)/sizeof(auBucketCounts[i]);
@@ -137,7 +137,7 @@ size_t SymTable_getLength(SymTable_T oSymTable) {
 int SymTable_put(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue) {
         struct Bind *newBind;
-        const char *copy;
+        char *copy;
         size_t hash;
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
