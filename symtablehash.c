@@ -39,10 +39,11 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
     size_t numBucketCounts;
     /*last array index in auBucketCounts[]*/
     const size_t last = 7;
+    size_t i.
 
     assert(oSymTable != NULL);
     numBucketCounts = 
-        sizeof(auBucketCounts)/sizeof(oSymTable->bucketCount);
+        sizeof(auBucketCounts)/sizeof(oSymTable->bucketCount[0]);
 
     /* handles the case in which auBucketCounts is at a max*/
     if (oSymTable->bucketCount == auBucketCounts[last]) {
@@ -53,15 +54,18 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
         return oSymTable->bucketCount;
     }
     
-    if (auBucketCounts[numBucketCounts] > oSymTable->bucketCount) {
+    for (i = 0; i < numBucketCounts; i++) {
+        if (auBucketCounts[ni] > oSymTable->bucketCount) {
         oSymTable->buckets = 
             realloc(oSymTable->buckets, 
-            sizeof(struct Bind*)* auBucketCounts[numBucketCounts]);
+            sizeof(struct Bind*)* auBucketCounts[i]);
         if (oSymTable->buckets == NULL) {
             free(oSymTable);
             return FALSE;
         }
-        oSymTable->bucketCount = auBucketCounts[numBucketCounts];  
+        oSymTable->bucketCount = auBucketCounts[i];
+        break;  
+        }
     }
     return oSymTable->bucketCount;
 }
