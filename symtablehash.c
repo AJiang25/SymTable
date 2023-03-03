@@ -35,8 +35,6 @@ struct Bind {
 
 static size_t Bucket_Size(SymTable_T oSymTable) {
     size_t i = 0;
-    /*last array index in auBucketCounts[]*/
-    int last = 7;
 
     /* stores the initial Bucket Counts when i is 0*/
     size_t numBucketCounts = 
@@ -44,27 +42,19 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
 
     assert(oSymTable != NULL);
 
-    /* handles the case in which auBucketCounts is at a max*/
+    while(oSymTable->counter > auBucketCounts[i]) {
+        i++;
+    }
+
     if (numBucketCounts == auBucketCounts[last]) {
         return numBucketCounts;
     }
 
-    /* if the number of binds is less than the number of Buckets,
-    incrememnt i */
-    if (oSymTable->counter > numBucketCounts) {
-        i++;
-        oSymTable->buckets = 
-            realloc(oSymTable->buckets, 
-            sizeof(struct Bind*)* auBucketCounts[i]);
-        /* checks if reallocation was successful*/ 
-        if (oSymTable->buckets == NULL) {
-            free(oSymTable);
-            return FALSE;
-        }
-        numBucketCounts = 
-            sizeof(auBucketCounts)/sizeof(auBucketCounts[i]);
+    if (i < numBucketCounts) {
+        return auBucketCounts[i];
     }
-    return numBucketCounts;
+
+    return auBucketCounts[numBucketCounts-1];
 }
 
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
