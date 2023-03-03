@@ -33,7 +33,7 @@ struct Bind {
     struct Bind *next;
 };
 
-static void expand(SymTable_T oSymTable) {
+static void expand(SymTable_T oSymTable, size_t numBucketCounts) {
     int i;
     assert(oSymTable != NULL);
     i = 0;
@@ -143,7 +143,7 @@ int SymTable_put(SymTable_T oSymTable,
         /* expansion call if necessary*/
         if (oSymTable->counter == Bucket_Size(oSymTable) &&
         oSymTable->counter != auBucketCounts[last]) {
-            expand(oSymTable);
+            expand(oSymTable, Bucket_Size(oSymTable));
         }
 
         hash = SymTable_hash(pcKey, Bucket_Size(oSymTable));
