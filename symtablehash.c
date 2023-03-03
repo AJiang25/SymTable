@@ -35,12 +35,10 @@ struct Bind {
     struct Bind *next;
 };
 
-static size_t Bucket_Size(SymTable_T oSymTable) {
+static void Bucket_Size(SymTable_T oSymTable) {
     size_t i;
-    size_t numBucketCounts;
     /*last array index in auBucketCounts[]*/
     const size_t last = 7;
-
 
     assert(oSymTable != NULL);
     i = 0;
@@ -50,22 +48,19 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
         return oSymTable->bucketCount;
     }
 
-    while (numBucketCounts > oSymTable->bucketCount) {
+    while (oSymTable->counter > oSymTable->bucketCount) {
         if (auBucketCounts[i] > oSymTable->bucketCount) {
             oSymTable->buckets = 
                 realloc(oSymTable->buckets, 
                 sizeof(struct Bind*)* auBucketCounts[i]);
             if (oSymTable->buckets == NULL) {
                 free(oSymTable);
-                return FALSE;
+                return;
             }
             oSymTable->bucketCount = auBucketCounts[i];
             i++;  
         }
     }
-    numBucketCounts = 
-        sizeof(auBucketCounts)/sizeof(auBucketCounts[i]);
-    return numBucketCounts;
 }
 
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
@@ -148,7 +143,7 @@ int SymTable_put(SymTable_T oSymTable,
         /*allocates more space and sets bucketcount 
         equal to the new size*/
         if (oSymTable->counter > oSymTable->bucketCount) {
-            oSymTable->bucketCount = Bucket_Size(oSymTable);
+            Bucket_Size(oSymTable);
         }
 
         hash = SymTable_hash(pcKey, oSymTable->bucketCount);
