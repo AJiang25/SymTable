@@ -48,18 +48,23 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
         return oSymTable->bucketCount;
     }
 
+    if (oSymTable->counter <= oSymTable->bucketCount) {
+        return oSymTable->bucketCount;
+    }
+
     while (oSymTable->counter > oSymTable->bucketCount) {
-        if (auBucketCounts[i] > oSymTable->bucketCount) {
-            oSymTable->buckets = 
-                realloc(oSymTable->buckets, 
-                sizeof(struct Bind*)* auBucketCounts[i]);
-            if (oSymTable->buckets == NULL) {
-                free(oSymTable);
-                return FALSE;
-            }
-            oSymTable->bucketCount = auBucketCounts[i];
-            i++;  
+        i++;
+    }
+    
+    if (auBucketCounts[i] > oSymTable->bucketCount) {
+        oSymTable->buckets = 
+            realloc(oSymTable->buckets, 
+            sizeof(struct Bind*)* auBucketCounts[i]);
+        if (oSymTable->buckets == NULL) {
+            free(oSymTable);
+            return FALSE;
         }
+        oSymTable->bucketCount = auBucketCounts[i];  
     }
     return oSymTable->bucketCount;
 }
