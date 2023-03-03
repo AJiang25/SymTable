@@ -45,7 +45,7 @@ static void Bucket_Size(SymTable_T oSymTable) {
 
     /* handles the case in which auBucketCounts is at a max*/
     if (oSymTable->bucketCount == auBucketCounts[last]) {
-        return oSymTable->bucketCount;
+        return;
     }
 
     while (oSymTable->counter > oSymTable->bucketCount) {
