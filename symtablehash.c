@@ -215,7 +215,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     size_t bucketSize;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-    bucketSize = bucket_Size(oSymTable);
+    bucketSize = Bucket_Size(oSymTable);
     hash = SymTable_hash(pcKey, bucketSize);
 
     for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
