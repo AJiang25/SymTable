@@ -46,10 +46,6 @@ static size_t Bucket_Size(SymTable_T oSymTable) {
         i++;
     }
 
-    if (numBucketCounts == auBucketCounts[last]) {
-        return numBucketCounts;
-    }
-
     if (i < numBucketCounts) {
         return auBucketCounts[i];
     }
