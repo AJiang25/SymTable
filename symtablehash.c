@@ -48,23 +48,24 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
 
-static size_t Expand(SymTable_T oSymTable) {
+/* Expands oSymTable by creating a new bucket array of the size 
+   in auBucketCounts and rehashes all the keys. Returns a size_t of 
+   the new size of the array. */
+static void Expand(SymTable_T oSymTable) {
     /*last array index in auBucketCounts[]*/
     const size_t LAST = 7;
     size_t i;
     size_t j;
     size_t hash;
-    size_t count;
     struct Bind** tmp;
     struct Bind* curr;
     struct Bind* next;
     assert(oSymTable != NULL);
     i = 0;
-    j = 0;
 
     /* handles the case in which auBucketCounts is at a max*/
     if (oSymTable->bucketCount == auBucketCounts[LAST]) {
-        return auBucketCounts[LAST];
+        return;
     }
 
     /*increments i to the new index*/
@@ -72,14 +73,12 @@ static size_t Expand(SymTable_T oSymTable) {
         i++;
     }
 
-    count = auBucketCounts[i]; 
     /*callocs the buckets based on auBucketCounts*/
-    tmp = calloc(count, sizeof(struct Bind*));
+    tmp = calloc(auBucketCounts[i], sizeof(struct Bind*));
 
     /*checks if successful*/
     if (tmp == NULL) {
-        free(tmp);
-        return FALSE;
+        return;
     }    
 
     /*goes through every old bucket & rehashes using the new size*/
@@ -88,7 +87,7 @@ static size_t Expand(SymTable_T oSymTable) {
 
         while (curr != NULL) {
             /*new hash*/
-            hash = SymTable_hash(curr->key, count); 
+            hash = SymTable_hash(curr->key, auBucketCounts[i]); 
             next = curr->next;
             curr->next = tmp[hash];
             tmp[hash] = curr;
@@ -98,9 +97,8 @@ static size_t Expand(SymTable_T oSymTable) {
 
     /*Frees the old array & sets the pointer to the new array*/
     free(oSymTable->buckets);
+    oSymTable->bucketCount = auBucketCounts[i];
     oSymTable->buckets = tmp;
-
-    return auBucketCounts[i];
 }
 
 SymTable_T SymTable_new(void) {
@@ -169,9 +167,9 @@ int SymTable_put(SymTable_T oSymTable,
 
         /*allocates more space and sets bucketcount 
         equal to the new size*/
-        /*if (oSymTable->counter == oSymTable->bucketCount) {
-            oSymTable->bucketCount = Expand(oSymTable);
-        }*/
+        if (oSymTable->counter == oSymTable->bucketCount) {
+            Expand(oSymTable);
+        }
 
         hash = SymTable_hash(pcKey, oSymTable->bucketCount);
 
