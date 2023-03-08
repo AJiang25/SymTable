@@ -41,6 +41,7 @@ static size_t Expand(SymTable_T oSymTable) {
     const size_t LAST = 7;
     size_t i;
     size_t j;
+    size_t hash;
     struct Bind* tmp;
     struct Bind* next;
     assert(oSymTable != NULL);
@@ -58,8 +59,8 @@ static size_t Expand(SymTable_T oSymTable) {
     }
 
     /*callocs the buckets based on auBucketCounts*/
-    oSymTable->buckets = (struct bind*)calloc(oSymTable->buckets, 
-        sizeof(struct Bind*) * auBucketCounts[i]);
+    oSymTable->buckets = (struct bind*)calloc(auBucketCounts[i], 
+        sizeof(struct Bind*));
 
     /*checks if successful*/
     if (oSymTable->buckets == NULL) {
@@ -71,8 +72,10 @@ static size_t Expand(SymTable_T oSymTable) {
     for (j = 0; j < auBucketCounts[i]; j++) {
         tmp = oSymTable->buckets[j];
         while (tmp != NULL) {
+            hash = SymTable_hash(tmp->key, auBucketCounts[i]);
             next = tmp->next;
-            tmp = SymTable_hash(tmp->key, auBucketCounts[i]);
+            tmp->next = oSymTable->buckets[hash];
+            oSymTable->buckets[hash] = tmp;
             free(tmp->key);
             free(tmp);
             tmp = next;
