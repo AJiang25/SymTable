@@ -51,7 +51,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 /* Expands oSymTable by creating a new bucket array of the size 
    in auBucketCounts and rehashes all the keys. Returns a size_t of 
    the new size of the array. */
-static void Expand(SymTable_T oSymTable) {
+static void SymTable_expand(SymTable_T oSymTable) {
     /*last array index in auBucketCounts[]*/
     const size_t LAST = 7;
     size_t i;
@@ -168,7 +168,7 @@ int SymTable_put(SymTable_T oSymTable,
         /*allocates more space and sets bucketcount 
         equal to the new size*/
         if (oSymTable->counter == oSymTable->bucketCount) {
-            Expand(oSymTable);
+            SymTable_expand(oSymTable);
         }
 
         hash = SymTable_hash(pcKey, oSymTable->bucketCount);
