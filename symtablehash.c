@@ -169,9 +169,9 @@ int SymTable_put(SymTable_T oSymTable,
 
         /*allocates more space and sets bucketcount 
         equal to the new size*/
-        if (oSymTable->counter == oSymTable->bucketCount) {
+        /*if (oSymTable->counter == oSymTable->bucketCount) {
             oSymTable->bucketCount = Expand(oSymTable);
-        }
+        }*/
 
         hash = SymTable_hash(pcKey, oSymTable->bucketCount);
 
