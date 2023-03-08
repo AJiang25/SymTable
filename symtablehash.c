@@ -54,7 +54,8 @@ static size_t Expand(SymTable_T oSymTable) {
     size_t i;
     size_t j;
     size_t hash;
-    struct Bind* tmp;
+    struct Bind** tmp;
+    struct Bind* curr;
     struct Bind* next;
     assert(oSymTable != NULL);
     i = 0;
@@ -71,26 +72,29 @@ static size_t Expand(SymTable_T oSymTable) {
     }
 
     /*callocs the buckets based on auBucketCounts*/
-    oSymTable->buckets = calloc(auBucketCounts[i], 
+    tmp = calloc(auBucketCounts[i], 
         sizeof(struct Bind*));
 
     /*checks if successful*/
-    if (oSymTable->buckets == NULL) {
-        free(oSymTable);
+    if (tmp == NULL) {
+        free(tmp);
         return FALSE;
     }    
 
     /*goes through every old bucket & rehashes using the new size*/
     for (j = 0; j < auBucketCounts[i]; j++) {
-        tmp = oSymTable->buckets[j];
-        while (tmp != NULL) {
-            hash = SymTable_hash(tmp->key, auBucketCounts[i]);
-            next = tmp->next;
-            tmp->next = oSymTable->buckets[hash];
-            oSymTable->buckets[hash] = tmp;
-            free(tmp->key);
-            free(tmp);
-            tmp = next;
+        curr = oSymTable->buckets[j];
+
+        while (curr != NULL) {
+            hash = SymTable_hash(curr->key, auBucketCounts[i]);
+
+            next = curr->next;
+            curr->next = tmp[hash];
+            tmp[hash] = curr;
+
+            free(curr->key);
+            free(curr);
+            curr = next;
         }
     }
 
