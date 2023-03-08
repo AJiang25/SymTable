@@ -71,7 +71,7 @@ static size_t Expand(SymTable_T oSymTable) {
     }
 
     /*callocs the buckets based on auBucketCounts*/
-    oSymTable->buckets = (struct Bind*)calloc(auBucketCounts[i], 
+    oSymTable->buckets = calloc(auBucketCounts[i], 
         sizeof(struct Bind*));
 
     /*checks if successful*/
