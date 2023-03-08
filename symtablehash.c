@@ -69,7 +69,7 @@ static void SymTable_expand(SymTable_T oSymTable) {
     }
 
     /*increments i to the new index*/
-    while (auBucketCounts[i] <= oSymTable->bucketCount) {
+    while (auBucketCounts[i] < oSymTable->bucketCount) {
         i++;
     }
     oSymTable->bucketCount = auBucketCounts[i];
@@ -167,7 +167,7 @@ int SymTable_put(SymTable_T oSymTable,
 
         /*allocates more space and sets bucketcount 
         equal to the new size*/
-        if (oSymTable->counter == oSymTable->bucketCount) {
+        if (oSymTable->counter > oSymTable->bucketCount) {
             SymTable_expand(oSymTable);
         }
 
