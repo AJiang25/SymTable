@@ -69,10 +69,10 @@ static void SymTable_expand(SymTable_T oSymTable) {
     }
 
     /*increments i to the new index*/
-    while (auBucketCounts[i] < oSymTable->bucketCount) {
+    while (auBucketCounts[i] <= oSymTable->bucketCount) {
         i++;
     }
-
+    oSymTable->bucketCount = auBucketCounts[i];
     /*callocs the buckets based on auBucketCounts*/
     tmp = calloc(auBucketCounts[i], sizeof(struct Bind*));
 
