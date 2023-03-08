@@ -6,7 +6,7 @@
 #include "symtable.h"
 
 /*defines FALSE (0) and TRUE (1)*/
-enum{FALSE, TRUE};
+enum {FALSE, TRUE};
 
 /* A SymTable structure is a "manager" structure that points
 to the first Bind and contains a counter that maintains the number

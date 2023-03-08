@@ -35,37 +35,56 @@ struct Bind {
     struct Bind *next;
 };
 
-static size_t Bucket_Size(SymTable_T oSymTable) {
-    size_t numBucketCounts;
-    /*last array index in auBucketCounts[]*/
-    const size_t last = 7;
-    size_t i;
 
+static size_t Expand(SymTable_T oSymTable) {
+    /*last array index in auBucketCounts[]*/
+    const size_t LAST = 7;
+    size_t i;
+    size_t j;
+    struct Bind* tmp;
+    struct Bind* next;
     assert(oSymTable != NULL);
-    numBucketCounts = 
-        sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
-        i = 0;
+    i = 0;
+    j = 0;
 
     /* handles the case in which auBucketCounts is at a max*/
-    if (oSymTable->bucketCount == auBucketCounts[last]) {
-        return auBucketCounts[last];
+    if (oSymTable->bucketCount == auBucketCounts[LAST]) {
+        return auBucketCounts[LAST];
     }
 
+    /*increments i to the new index*/
     while (auBucketCounts[i] < oSymTable->bucketCount) {
         i++;
     }
-    
-    oSymTable->buckets = 
-        realloc(oSymTable->buckets, 
+
+    /*callocs the buckets based on auBucketCounts*/
+    oSymTable->buckets = (struct bind*)calloc(oSymTable->buckets, 
         sizeof(struct Bind*) * auBucketCounts[i]);
-        
+
+    /*checks if successful*/
     if (oSymTable->buckets == NULL) {
         free(oSymTable);
         return FALSE;
+    }    
+
+    /*goes through every old bucket & rehashes using the new size*/
+    for (j = 0; j < auBucketCounts[i]; j++) {
+        tmp = oSymTable->buckets[j];
+        while (tmp != NULL) {
+            next = tmp->next;
+            tmp = SymTable_hash(tmp->key, auBucketCounts[i]);
+            free(tmp->key);
+            free(tmp);
+            tmp = next;
+        }
     }
+
+    /*Links it to the new array*/
+
+    /*Frees the old array & sets the pointer ot the new array*/
+
     return auBucketCounts[i];
 }
-
 
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
    inclusive. */
@@ -147,7 +166,7 @@ int SymTable_put(SymTable_T oSymTable,
         /*allocates more space and sets bucketcount 
         equal to the new size*/
         if (oSymTable->counter == oSymTable->bucketCount) {
-            oSymTable->bucketCount = Bucket_Size(oSymTable);
+            oSymTable->bucketCount = Expand(oSymTable);
         }
 
         hash = SymTable_hash(pcKey, oSymTable->bucketCount);
