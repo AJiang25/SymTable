@@ -77,7 +77,7 @@ static size_t Expand(SymTable_T oSymTable) {
 
     /*checks if successful*/
     if (tmp == NULL) {
-        return NULL;
+        return FALSE;
     }    
 
     /*goes through every old bucket & rehashes using the new size*/
@@ -94,7 +94,7 @@ static size_t Expand(SymTable_T oSymTable) {
             curr = next;
         }
     }
-    
+
     /*Frees the old array & sets the pointer ot the new array*/
     free(oSymTable->buckets);
     oSymTable->buckets = tmp;
