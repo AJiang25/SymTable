@@ -77,8 +77,7 @@ static size_t Expand(SymTable_T oSymTable) {
 
     /*checks if successful*/
     if (tmp == NULL) {
-        free(tmp);
-        return FALSE;
+        return NULL;
     }    
 
     /*goes through every old bucket & rehashes using the new size*/
@@ -86,21 +85,19 @@ static size_t Expand(SymTable_T oSymTable) {
         curr = oSymTable->buckets[j];
 
         while (curr != NULL) {
-            hash = SymTable_hash(curr->key, auBucketCounts[i]);
+            /*new hash*/
+            hash = SymTable_hash(curr->key, auBucketCounts[i]); 
 
             next = curr->next;
             curr->next = tmp[hash];
             tmp[hash] = curr;
-
-            free(curr->key);
-            free(curr);
             curr = next;
         }
     }
-
-    /*Links it to the new array*/
-
+    
     /*Frees the old array & sets the pointer ot the new array*/
+    free(oSymTable->buckets);
+    oSymTable->buckets = tmp;
 
     return auBucketCounts[i];
 }
