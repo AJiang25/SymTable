@@ -6,10 +6,6 @@
 #ifndef SYMTABLE_INCLUDED
 #define SYMTABLE_INCLUDED
 #include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
 
 /* A SymTable_T object is a an unordered collection of bindings that
 hold a unique key and a value*/
@@ -27,8 +23,7 @@ size_t SymTable_getLength(SymTable_T oSymTable);
 
 /* Adds a binding to oSymTable with key pcKey and value *pvValue and 
 returns 1 (TRUE), otherwise return 0 (FALSE) and leaves oSymTable 
-unchanged. Return a checked runtime error when oSymTable or pcKey 
-is NULL */
+unchanged.*/
 int SymTable_put(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue);
 
@@ -55,7 +50,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey);
 
 /* Apply function *pfApply to each binding in oSymTable, 
 passing pvExtra as an extra parameter. That is, the function 
-must call (*pfApply)(pcKey, pvValue, pvExtra) for each pcKey/pvValue 
+calls (*pfApply)(pcKey, pvValue, pvExtra) for each pcKey/pvValue 
 binding in oSymTable.*/
 void SymTable_map(SymTable_T oSymTable, void (*pfApply)
 (const char *pcKey, void *pvValue, void *pvExtra), 

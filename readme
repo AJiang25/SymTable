@@ -57,13 +57,13 @@ None
 ------------------------------------------------------------------------
 What is your assessment of the assignment? Was it helpful? Was it fun?
 
-
+The hash expand function had to be the most confusing part of this
+assignment. I thought it was good for learning about pointer notation.
 
 ------------------------------------------------------------------------
 (optional) What information can you provide about your submission that
 will help your grader to grade it in the most favorable light? In
 particular, what bugs are in your submission?
-
 
 
 ------------------------------------------------------------------------
@@ -151,6 +151,6 @@ The non-expanding hash table implementation with:
 The expanding hash table implementation with:
 -- 50 bindings consumed 0.000000 seconds.
 -- 500 bindings consumed 0.000000 seconds.
--- 5000 bindings consumed 0.006840 seconds.
--- 50000 bindings consumed 0.481996 seconds.
--- 500000 bindings consumed 98.634993 seconds.
+-- 5000 bindings consumed 0.005736 seconds.
+-- 50000 bindings consumed 0.135265 seconds.
+-- 500000 bindings consumed 2.112026 seconds.

@@ -4,6 +4,9 @@
 /*-------------------------------------------------------------------*/
 
 #include "symtable.h"
+#include <assert.h>
+#include <string.h>
+#include <stdlib.h>
 
 /*defines FALSE (0) and TRUE (1)*/
 enum {FALSE, TRUE};
@@ -12,6 +15,7 @@ enum {FALSE, TRUE};
 static const size_t auBucketCounts[] = {509, 1021, 2039, 
     4093, 8191, 16381, 32749, 65521};
 
+/*global variable that stores the number of buckets at a given time*/
 static const size_t numBucketCounts = 
     sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
 
@@ -146,15 +150,12 @@ void SymTable_free(SymTable_T oSymTable) {
         }
     }
 
-    /*frees the linked list array: buckets*/
+    /*frees the linked list array: buckets & overall SymTable*/
     free(oSymTable->buckets);
-
-    /*frees the overall SymTable after values are freed */
     free(oSymTable);
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable) {
-   /*checks that oSymTable isn't NULL*/
     assert(oSymTable != NULL);
     return oSymTable->counter;
 }
@@ -239,6 +240,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     assert(pcKey != NULL);
     hash = SymTable_hash(pcKey, oSymTable->bucketCount);
 
+    /*searches the oSymTable*/
     for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
         if (strcmp(pcKey, tmp->key) == 0) 
             return TRUE;
@@ -253,9 +255,12 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     assert(pcKey != NULL);
     hash = SymTable_hash(pcKey, oSymTable->bucketCount);
 
+    /*checks if the oSymTable contains the Key*/
     if (SymTable_contains(oSymTable, pcKey) == 0) {
         return NULL;
     }
+
+    /*Searches for the value*/
     for (tmp = oSymTable->buckets[hash]; tmp != NULL; tmp = tmp->next){
         if (strcmp(pcKey, tmp->key) == 0) 
             return (void*)tmp->value;
@@ -270,7 +275,6 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     void *val;
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
-
     hash = SymTable_hash(pcKey, oSymTable->bucketCount);
     val = NULL;
     before = NULL;
@@ -293,11 +297,13 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
             val = (void*)tmp->value;
             oSymTable->buckets[hash] = tmp->next;
         }
+
         /*handles other bind cases*/
         else {
             val = (void*)tmp->value;
             before->next = tmp->next;
         }
+
         /* keys the key, tmp, decrements counter, returns val*/
         free(tmp->key);
         free(tmp);
@@ -312,10 +318,8 @@ void SymTable_map(SymTable_T oSymTable, void (*pfApply)
     const void *pvExtra) {
     size_t i;
     struct Bind *current;
-
     assert(oSymTable != NULL);
     assert(pfApply != NULL);
-
     for (i = 0; i < oSymTable->bucketCount; i++) {
         current = oSymTable->buckets[i];
         while (current != NULL) {

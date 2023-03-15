@@ -4,6 +4,9 @@
 /*-------------------------------------------------------------------*/
 
 #include "symtable.h"
+#include <assert.h>
+#include <string.h>
+#include <stdlib.h>
 
 /*defines FALSE (0) and TRUE (1)*/
 enum {FALSE, TRUE};
@@ -41,7 +44,6 @@ SymTable_T SymTable_new(void) {
     /*Sets the first bind to NULL and counter to 0*/
     oSymTable->first = NULL;
     oSymTable->counter = 0; 
-
     return oSymTable;
 }
 
@@ -58,13 +60,11 @@ void SymTable_free(SymTable_T oSymTable) {
         free(bind->key);
         free(bind);
     }
-
     /*frees the overall SymTable after values are freed */
     free(oSymTable);
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable) {
-    /*checks that oSymTable isn't NULL*/
     assert(oSymTable != NULL);
     return oSymTable->counter;
 }
@@ -92,7 +92,6 @@ const char *pcKey, const void *pvValue) {
 
     /*allocates memory for the newBind*/
     newBind = (struct Bind*)malloc(sizeof(struct Bind));
-
     if (newBind == NULL) {
         return FALSE;
     }
@@ -182,11 +181,13 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
             val = (void*)tmp->value;
             oSymTable->first = tmp->next;
         }
+
         /*handles other key cases*/
         else {
             val = (void*)tmp->value;
             before->next = tmp->next;
         }
+
         /* keys the key, tmp, decrements counter, returns val*/
         free(tmp->key);
         free(tmp);
@@ -200,10 +201,8 @@ void SymTable_map(SymTable_T oSymTable,
     void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
     const void *pvExtra) {
         struct Bind *current;
-
         assert(oSymTable != NULL);
         assert(pfApply != NULL);
-
         for (current = oSymTable->first; current != NULL; 
              current = current->next) {
                 (*pfApply)((void*)current->key, 
