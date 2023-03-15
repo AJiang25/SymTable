@@ -29,7 +29,7 @@ The course's current staff members outside of class time through office hours.
 Donna's office hours
 
 The course's current staff members outside of class time through meetings.
-Donna Gabai
+Donna Gabai's unofficial office hours between precepts on Mondays/Wednesdays
 
 The course's current staff members outside of class time through Ed.
 
@@ -80,21 +80,21 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
-   symtablelist.c: line 71: medium priority:
+   symtablelist.c: line 74: medium priority:
    Do you want to validate 'pvValue' through an assert?
 
-   symtablelist.c: line 109: medium priority:
+   symtablelist.c: line 111: medium priority:
    Do you want to validate 'pvValue' through an assert?
 
-   symtablelist.c: line 198: medium priority:
+   symtablelist.c: line 202: medium priority:
    Do you want to validate 'pvExtra' through an assert?
 
-   pvValue in line 71 & line 109 should not be asserted to be != to NULL
+   pvValue in line 74 & line 111 should not be asserted to be != to NULL
    because a SymTable object is not responsible for allocating the
    memory in which its values reside. This means that the value could be
    NULL. 
 
-   pvExtra in line 198 should not be asserted to be != to NULL becuase
+   pvExtra in line 202 should not be asserted to be != to NULL becuase
    on line 427 in testsymtable.c, NULL can be passed as an argument
 
 ------------------------------------------------------------------------
@@ -111,21 +111,21 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
-   symtablehash.c: line 95: medium priority:
+   symtablehash.c: line 163: medium priority:
    Do you want to validate 'pvValue' through an assert?
 
-   symtablehash.c: line 136: medium priority:
+   symtablehash.c: line 210: medium priority:
    Do you want to validate 'pvValue' through an assert?
 
-   symtablehash.c: line 237: medium priority:
+   symtablehash.c: line 317: medium priority:
    Do you want to validate 'pvExtra' through an assert?
 
-   pvValue in line 95 & line 136 should not be asserted to be != to NULL
+   pvValue in line 163 & line 210 should not be asserted to be != to NULL
    because a SymTable object is not responsible for allocating the
    memory in which its values reside. This means that the value could be
    NULL. 
 
-   pvExtra in line 237 should not be asserted to be != to NULL becuase
+   pvExtra in line 317 should not be asserted to be != to NULL becuase
    on line 427 in testsymtable.c, NULL can be passed as an argument
 
 ------------------------------------------------------------------------
