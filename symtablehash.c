@@ -60,7 +60,6 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    a size_t of the new size of the array. */
 static void SymTable_expand(SymTable_T oSymTable) {
     /*last array index in auBucketCounts[]*/
-    const size_t LAST = 7;
     size_t i;
     size_t j;
     size_t hash;
