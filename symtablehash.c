@@ -12,6 +12,9 @@ enum {FALSE, TRUE};
 static const size_t auBucketCounts[] = {509, 1021, 2039, 
     4093, 8191, 16381, 32749, 65521};
 
+static const size_t numBucketCounts = 
+    sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);
+
 /* A SymTable structure is a "manager" structure that points
 to a "bucket" and contains a counter that maintains the number
 of binds*/
@@ -48,9 +51,9 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
 
-/* Expands oSymTable by creating a new bucket array of the size 
-   in auBucketCounts and rehashes all the keys. Returns a size_t of 
-   the new size of the array. */
+/* Expands SymTable_T oSymTable by creating a new bucket array of 
+   the size in auBucketCounts and rehashes all the keys. Returns 
+   a size_t of the new size of the array. */
 static void SymTable_expand(SymTable_T oSymTable) {
     /*last array index in auBucketCounts[]*/
     const size_t LAST = 7;
@@ -63,20 +66,19 @@ static void SymTable_expand(SymTable_T oSymTable) {
     assert(oSymTable != NULL);
     i = 0;
 
+    /*increments i to the new index*/
+    while (i < numBucketCounts - 1 && 
+        auBucketCounts[i] <= oSymTable->bucketCount) {
+            i++;
+    }
+
     /* handles the case in which auBucketCounts is at a max*/
-    if (oSymTable->bucketCount == auBucketCounts[LAST]) {
+    if (i == numBucketCounts - 1) {
         return;
     }
 
-    /*increments i to the new index*/
-    while (auBucketCounts[i] < oSymTable->bucketCount) {
-        i++;
-    }
-    oSymTable->bucketCount = auBucketCounts[i];
     /*callocs the buckets based on auBucketCounts*/
     tmp = calloc(auBucketCounts[i], sizeof(struct Bind*));
-
-    /*checks if successful*/
     if (tmp == NULL) {
         return;
     }    
@@ -167,9 +169,9 @@ int SymTable_put(SymTable_T oSymTable,
 
         /*allocates more space and sets bucketcount 
         equal to the new size*/
-        /*if (oSymTable->counter == oSymTable->bucketCount) {
+        if (oSymTable->counter == oSymTable->bucketCount) {
             SymTable_expand(oSymTable);
-        }*/
+        }
 
         hash = SymTable_hash(pcKey, oSymTable->bucketCount);
 
