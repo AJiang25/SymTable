@@ -15,10 +15,6 @@ enum {FALSE, TRUE};
 static const size_t auBucketCounts[] = {509, 1021, 2039, 
     4093, 8191, 16381, 32749, 65521};
 
-/*global variable that stores the number of buckets at a given time*/
-/*static const size_t numBucketCounts = 
-    sizeof(auBucketCounts)/sizeof(auBucketCounts[0]);*/
-
 /* A SymTable structure is a "manager" structure that points
 to a "bucket" and contains a counter that maintains the number
 of binds*/
@@ -66,6 +62,7 @@ static void SymTable_expand(SymTable_T oSymTable) {
     struct Bind** tmp;
     struct Bind* curr;
     struct Bind* next;
+    /*stores the # of buckets at a given time*/
     size_t numBucketCounts;
     assert(oSymTable != NULL);
     i = 0;
