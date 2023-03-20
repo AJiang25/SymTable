@@ -8,7 +8,7 @@
 #include <stddef.h>
 
 /* A SymTable_T object is a an unordered collection of bindings that
-hold a unique key and a value*/
+hold a unique key that is a char * (string) and a size_t value*/
 typedef struct SymTable *SymTable_T;
 
 /* returns a new SymTable object that is created with no bindings
@@ -34,16 +34,18 @@ unchanged and returns NULL. */
 void *SymTable_replace(SymTable_T oSymTable,
     const char *pcKey, const void *pvValue);
 
-/* return 1 (TRUE) if oSymTable contains a binding whose key 
+/* Takes in an oSymtable and a binding whose key is pcKey. Returns 1 
+(TRUE) if there exists a oSymTable that contains a binding whose key 
 is pcKey, and 0 (FALSE) otherwise.*/
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey);
 
-/* returns the value of the binding within oSymTable whose key 
+/* Takes in an oSymtable and a binding whose key is pcKey. 
+Returns the value of the binding within oSymTable whose key 
 is pcKey, or NULL if no such binding exists.*/
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey);
 
 /* If oSymTable contains a binding with key pcKey, then 
-SymTable_remove removes that binding from oSymTable and 
+the function removes that binding from oSymTable and 
 return the binding's value. Otherwise the function doesn't 
 change oSymTable and returns NULL.*/
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey);

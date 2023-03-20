@@ -12,9 +12,9 @@ in the "Policies" web page (also available on armlab in the file
 ~cos217/AuthorizedSourcesList ) to this section of the readme file,
 and edit it as appropriate.
 
-The course's lectures: 1 - 10
+The course's lectures: 1 - 13
 
-The course's precepts.
+The course's precepts. 1 - 13
 
 The course's website.
 
@@ -95,7 +95,9 @@ write "None."
    NULL. 
 
    pvExtra in line 202 should not be asserted to be != to NULL becuase
-   on line 427 in testsymtable.c, NULL can be passed as an argument
+   on line 427 in testsymtable.c, NULL can be passed as an argument. If
+   the callback function doesn't need pvExtra, then pvExtra should be
+   Null.
 
 ------------------------------------------------------------------------
 What warnings does splint generate on symtablehash.c, and what are your
@@ -126,7 +128,9 @@ write "None."
    NULL. 
 
    pvExtra in line 317 should not be asserted to be != to NULL becuase
-   on line 427 in testsymtable.c, NULL can be passed as an argument
+   on line 427 in testsymtable.c, NULL can be passed as an argument. If
+   the callback function doesn't need pvExtra, then pvExtra should be
+   Null.
 
 ------------------------------------------------------------------------
 What are the CPU times reported by testsymtable.c with binding counts

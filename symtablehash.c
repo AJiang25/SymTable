@@ -15,11 +15,12 @@ enum {FALSE, TRUE};
 static const size_t auBucketCounts[] = {509, 1021, 2039, 
     4093, 8191, 16381, 32749, 65521};
 
-/* A SymTable structure is a "manager" structure that points
-to a "bucket" and contains a counter that maintains the number
-of binds*/
+/* A SymTable structure is a "manager" structure that points to 
+"buckets" that points to a specific bucket and contains a size_t 
+counter that maintains the number of binds & another counter 
+that counts the number of buckets*/
 struct SymTable {
-    /*points to the bucket*/
+    /*pointer to a pointer to a bucket*/
     struct Bind **buckets;
     /*tracks the number of binds*/
     size_t counter;
@@ -27,8 +28,8 @@ struct SymTable {
     size_t bucketCount;
 };
 
-/* A value and unique key is stored in a bind. Binds are linked
- to form a list*/
+/* A value and unique char* (string) key is stored in a bind. 
+Binds are linked to form a list via a pointer to the next bind*/
 struct Bind {
     /*points to a string that represents the key*/
     char *key;

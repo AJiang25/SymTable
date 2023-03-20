@@ -22,7 +22,7 @@ struct SymTable {
 };
 
 /* A value and unique key is stored in a bind. Binds are linked
- to form a list*/
+ to form a list via a pointer to the next bind*/
 struct Bind {
     /*points to a string that represents the key*/
     char *key;
