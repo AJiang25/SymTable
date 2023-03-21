@@ -171,7 +171,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     /* checks if oSymTable contains the key */
     if (SymTable_contains(oSymTable, pcKey)) {
         
-        /* replaces the value with a given value */
+        /* loops to the first instace of pcKey, compares it */
         for (tmp = oSymTable->first; tmp!= NULL && 
             strcmp(tmp->key, pcKey); 
             before = tmp, tmp = tmp->next);
@@ -188,7 +188,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
             before->next = tmp->next;
         }
 
-        /* keys the key, tmp, decrements counter, returns val*/
+        /* frees the key, tmp, decrements counter, returns val*/
         free(tmp->key);
         free(tmp);
         oSymTable->counter--;
