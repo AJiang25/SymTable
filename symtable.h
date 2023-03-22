@@ -36,12 +36,12 @@ void *SymTable_replace(SymTable_T oSymTable,
 
 /* Takes in an oSymtable and a binding whose key is pcKey. Returns 1 
 (TRUE) if there exists a oSymTable that contains a binding whose key 
-is pcKey, and 0 (FALSE) otherwise.*/
+is pcKey, and returns 0 (FALSE) otherwise.*/
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey);
 
 /* Takes in an oSymtable and a binding whose key is pcKey. 
 Returns the value of the binding within oSymTable whose key 
-is pcKey, or NULL if no such binding exists.*/
+is pcKey, or returns NULL if no such binding exists.*/
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey);
 
 /* If oSymTable contains a binding with key pcKey, then 
