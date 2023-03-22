@@ -80,13 +80,13 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
-   symtablelist.c: line 74: medium priority:
+   symtablelist.c: line 81: medium priority:
    Do you want to validate 'pvValue' through an assert?
 
-   symtablelist.c: line 111: medium priority:
+   symtablelist.c: line 122: medium priority:
    Do you want to validate 'pvValue' through an assert?
 
-   symtablelist.c: line 202: medium priority:
+   symtablelist.c: line 227: medium priority:
    Do you want to validate 'pvExtra' through an assert?
 
    pvValue in line 74 & line 111 should not be asserted to be != to NULL
@@ -113,13 +113,13 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
-   symtablehash.c: line 163: medium priority:
+   symtablehash.c: line 164: medium priority:
    Do you want to validate 'pvValue' through an assert?
 
-   symtablehash.c: line 210: medium priority:
+   symtablehash.c: line 211: medium priority:
    Do you want to validate 'pvValue' through an assert?
 
-   symtablehash.c: line 317: medium priority:
+   symtablehash.c: line 318: medium priority:
    Do you want to validate 'pvExtra' through an assert?
 
    pvValue in line 163 & line 210 should not be asserted to be != to NULL
