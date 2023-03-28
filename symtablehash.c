@@ -168,8 +168,8 @@ int SymTable_put(SymTable_T oSymTable,
         assert(oSymTable != NULL);
         assert(pcKey != NULL);
 
-        /*allocates more space and sets bucketcount 
-        equal to the new size*/
+        /*Calls expand function to allocate more space and set 
+        bucketcount equal to the new size*/
         if (oSymTable->counter == oSymTable->bucketCount) {
             SymTable_expand(oSymTable);
         }
