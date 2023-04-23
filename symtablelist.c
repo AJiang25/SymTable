@@ -103,6 +103,7 @@ int SymTable_put(SymTable_T oSymTable,
     newBind = (struct Bind *)malloc(sizeof(struct Bind));
     if (newBind == NULL)
     {
+        free(copy);
         return FALSE;
     }
 

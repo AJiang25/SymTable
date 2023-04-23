@@ -113,7 +113,6 @@ SymTable_T SymTable_new(void) {
     /*allocates memory for a new SymTable*/
     oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
     if (oSymTable == NULL) {
-        free(oSymTable);
         return NULL;
     } 
 
